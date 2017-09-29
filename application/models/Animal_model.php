@@ -20,8 +20,6 @@ class Animal_model extends CI_Model {
     public function upload($name = '')
     {
 
-        $ds = DIRECTORY_SEPARATOR;
-
         $storeFolder = 'uploads/animals/';
 
         if (!empty($_FILES)) {
@@ -92,15 +90,20 @@ class Animal_model extends CI_Model {
 
         foreach ($animals as $key => $row) {
             if ($row->id > 0) {
-                $this->db->select(`t2.` . $this->getAdditional($row->type_id));
-                $this->db->from('animals_' . $this->getType($row->type_id) . 's t1');
-                $this->db->join($this->getType($row->type_id) . 's t2', 't1.' . $this->getType($row->type_id) .'_id = t2.id' );
+                $additional = $this->getAdditional($row->type_id);
+                $type = $this->getType($row->type_id);
+
+                $this->db->select(`t2.` . $additional . ` additional`);
+                $this->db->from('animals_' . $type . 's t1');
+                $this->db->join($type . 's t2', 't1.' . $type .'_id = t2.id' );
+                $this->db->limit(1);
                 $query = $this->db->get();
                 $row->additional = $query->result();
 
                 $this->db->select('name');
                 $this->db->from('types');
                 $this->db->where('id', $row->type_id);
+                $this->db->limit(1);
                 $query = $this->db->get();
                 $row->type = $query->result()[0];
 

@@ -254,6 +254,7 @@ var App = (function () {
             dataType: 'json',
             error: function (XHR, status, response) {
                 console.log(XHR);
+                console.log(status);
             }
         });
     };
@@ -442,17 +443,41 @@ var App = (function () {
           var iwBackground = iwOuter.prev();
 
           // Remove the background shadow DIV
-          iwBackground.children(':nth-child(2)').css({'display' : 'none'});
+          iwBackground.children(':nth-child(2)').css({'display' : 'none', 'background-color' : 'transparent'}).remove();
 
           // Remove the white background DIV
-          iwBackground.children(':nth-child(4)').css({'display' : 'none'});
+          iwBackground.children(':nth-child(4)').css({'display' : 'none', 'background-color' : 'transparent'}).remove();
+          iwOuter.prev().css({'display' : 'none', 'background-color' : 'transparent'});
+          $('#iw-container').parent('div').css({'overflow':'hidden'});
 
+          // Taking advantage of the already established reference to
+        // div .gm-style-iw with iwOuter variable.
+        // You must set a new variable iwCloseBtn.
+        // Using the .next() method of JQuery you reference the following div to .gm-style-iw.
+        // Is this div that groups the close button elements.
+          var iwCloseBtn = iwOuter.next();
 
+        // Apply the desired effect to the close button
+          iwCloseBtn.css({
+              'opacity': '1', // by default the close button has an opacity of 0.7
+              right: '50px', top: '0px', // button repositioning
+              // 'border': '7px solid #000', // increasing button border and new color
+              // 'border-radius': '13px', // circular effect
+              // 'box-shadow': '0 0 5px #3990B9' // 3D effect to highlight the button
+          });
+
+        // The API automatically applies 0.7 opacity to the button after the mouseout event.
+        // This function reverses this event to the desired value.
+        //   iwCloseBtn.mouseout(function(){
+        //       $(this).css({opacity: '1'});
+        //   });
       });
 
 
-
       for (i = 0; i < markers.length; i++) {
+
+          if (!markers[i].name.length && !markers[i].additional.length && !markers[i].type.length &&
+              !markers[i].photo.length && !markers[i].lat.length && !markers[i].lng.length) continue;
 
           var Coordinate = new google.maps.LatLng(1 * markers[i].lat, 1 * markers[i].lng);
 
@@ -465,16 +490,19 @@ var App = (function () {
 
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
-              var content = '<div id="iw-container" class="info-window" data-id=' + markers[i].id + '>'+
-                '<div class="iw-title ' + markers[i].type.name + '">'+
-                '<h3>' + markers[i].name  + '</h3>'+
-                '</div>'+
+              if (!markers[i].additional.length) return false;
+              markers[i].additional = markers[i].additional[0];
 
-                '<div id="bodyContent">'+
-                '<p>' + markers[i].name  + '</p>'+
+              var content = '<div id="iw-container" class="info-window" data-id="' + markers[i].id + '">'+
+                '<div class="iw-title">'+
+                '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
+                '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                '<p><span>' + markers[i].name.toUpperCase()  + '</span></p>' +
+                '<p><span>' +  + '</span></p></div>' +
                 '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                '<p>' + markers[i].type.name + '</p>'+
                 '</div>'+
+                '</div>' +
                 '</div>';
 
               return function () {
