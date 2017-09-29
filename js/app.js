@@ -63,7 +63,6 @@ var App = (function () {
 
         $('.map').append(btn).append(search);
         $('body').append(modal);
-        // $('dz-container').addClass('dropzone');
 
     };
 
@@ -429,48 +428,62 @@ var App = (function () {
 
   function addMarkers( markers ) {
 
-      var item = false;
+      var infowindow = new google.maps.InfoWindow();
+
+      google.maps.event.addListener(infowindow, 'domready', function() {
+
+          // Reference to the DIV which receives the contents of the infowindow using jQuery
+          var iwOuter = $('.gm-style-iw');
+
+          /* The DIV we want to change is above the .gm-style-iw DIV.
+           * So, we use jQuery and create a iwBackground variable,
+           * and took advantage of the existing reference to .gm-style-iw for the previous DIV with .prev().
+           */
+          var iwBackground = iwOuter.prev();
+
+          // Remove the background shadow DIV
+          iwBackground.children(':nth-child(2)').css({'display' : 'none'});
+
+          // Remove the white background DIV
+          iwBackground.children(':nth-child(4)').css({'display' : 'none'});
+
+
+      });
+
+
 
       for (i = 0; i < markers.length; i++) {
-          item = markers[i];
 
-          contentString = '<div class="info-window" data-id=' + markers + '>'+
-              '<div id="siteNotice">'+
-              '</div>'+
-              '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-              '<div id="bodyContent">'+
-              '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-              'sandstone rock formation in the southern part of the '+
-              'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-              'south west of the nearest large town, Alice Springs; 450&#160;km '+
-              '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-              'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-              'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-              'Aboriginal people of the area. It has many springs, waterholes, '+
-              'rock caves and ancient paintings. Uluru is listed as a World '+
-              'Heritage Site.</p>'+
-              '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-              'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-              '(last visited June 22, 2009).</p>'+
-              '</div>'+
-              '</div>';
+          var Coordinate = new google.maps.LatLng(1 * markers[i].lat, 1 * markers[i].lng);
 
-          infowindow = new google.maps.InfoWindow({
-              content: contentString
+          var marker = new google.maps.Marker({
+              position: Coordinate,
+              map: map,
+              icon: 'img/marker.png'
           });
 
-          markers[i] = new google.maps.Marker({
-                      position: {
-                          lat: 1 * item.lat,
-                          lng: 1 * item.lng
-                      },
-                      map: map,
-                      icon: 'img/marker.png'
-            });
 
-          markers[i].addListener('click', function() {
-                  infowindow.open(map, markers[i]);
-              });
+          google.maps.event.addListener(marker, 'click', (function (marker, i) {
+
+              var content = '<div id="iw-container" class="info-window" data-id=' + markers[i].id + '>'+
+                '<div class="iw-title ' + markers[i].type.name + '">'+
+                '<h3>' + markers[i].name  + '</h3>'+
+                '</div>'+
+
+                '<div id="bodyContent">'+
+                '<p>' + markers[i].name  + '</p>'+
+                '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
+                '<p>' + markers[i].type.name + '</p>'+
+                '</div>'+
+                '</div>';
+
+              return function () {
+                  infowindow.setContent(content);
+                  infowindow.open(map, marker);
+              }
+
+          })(marker, i));
+
           }
 
       }

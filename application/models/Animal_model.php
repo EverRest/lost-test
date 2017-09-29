@@ -97,6 +97,13 @@ class Animal_model extends CI_Model {
                 $this->db->join($this->getType($row->type_id) . 's t2', 't1.' . $this->getType($row->type_id) .'_id = t2.id' );
                 $query = $this->db->get();
                 $row->additional = $query->result();
+
+                $this->db->select('name');
+                $this->db->from('types');
+                $this->db->where('id', $row->type_id);
+                $query = $this->db->get();
+                $row->type = $query->result()[0];
+
             }
         }
 
