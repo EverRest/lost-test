@@ -360,18 +360,22 @@ var App = (function () {
             lost.photo = $('.dz-image').find('img').attr('alt');
             lost.additional = $('#additional').val();
 
+            lostModal = $('#lostModal');
+
             if (lost.name && lost.type && lost.additional && lost.photo) {
                 $('#name').val('');
                 $('#additional').val('');
 
-                $('#lostModal').find('.modal-header').append(mess);
+                lostModal.find('.modal-header').append(mess);
+                lostModal.find('.modal-body').slideDown('fast');
                 hideMarkers(map, $this.markers);
 
                 setTimeout(function () {
                     addMarkerEvent();
                     $('.form-msg').remove();
+                    lostModal.find('.modal-body').slideUp('fast');
 
-                    $('#lostModal').find('.close').click();
+                    lostModal.find('.close').click();
 
                     var issetData = setInterval(function () {
                         if(marker && lost.name && lost.type && lost.additional && lost.photo) {
@@ -379,6 +383,11 @@ var App = (function () {
                             lost.lng = marker.position.lng();
 
                             save(lost);
+
+                            $('#map').append('<div class="lost-success"><h2>Thank You! Saving the data...</h2></div>');
+                            setTimeout(function () {
+                                $('.lost-success').remove();
+                            }, 3000);
 
                         clearInterval(issetData);
                         getInfo();
@@ -466,7 +475,7 @@ var App = (function () {
             addMarker(event.latLng, map);
         });
 
-        // Adds a marker to the map.
+        // add a marker to the map.
         function addMarker(location, map) {
             marker = new google.maps.Marker({
                 position: location,
@@ -475,25 +484,7 @@ var App = (function () {
                 draggable: true
             });
 
-
-
-            //add tootltips
-            // marker.tooltipContent = 'this content should go inside the tooltip';
-
             $this.markers.push(marker);
-            //
-            // google.maps.event.addListener(marker, 'mouseover', function () {
-            //     console.log();
-            //     var point = fromLatLngToPoint(marker.getPosition(), map);
-            //     $('#marker-tooltip').html(marker.tooltipContent + '<br>Pixel coordinates: ' + point.x + ', ' + point.y).css({
-            //         'left': point.x,
-            //         'top': point.y
-            //     }).show();
-            // });
-            //
-            // google.maps.event.addListener(marker, 'mouseout', function () {
-            //     $('#marker-tooltip').hide();
-            // });
 
             // add InfoWindow
             google.maps.event.addListener(marker, 'click', (function (marker, i) {
@@ -548,6 +539,13 @@ var App = (function () {
             }
 
         });
+    };
+
+    App.prototype.initPreloader =   function () {
+        setTimeout(function () {
+            $('.loader').hide('fast');
+            $('.map').show('fast');
+        }, 1500);
     };
 
     /**

@@ -1,6 +1,7 @@
 (function () {
     var app = new App;
 
+    app.initPreloader();
     app.getData();
     app.renderForm();
     app.renderFields();

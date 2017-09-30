@@ -76,6 +76,20 @@ nav {
     /*float: left;*/
 }
 
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .dz-container {
     width: 50%;
     margin: 0 25% 5% 25%;
@@ -90,6 +104,24 @@ nav {
 .map .gm-style img[src^='https://maps.gstatic.com/mapfiles/api-3/images/google4.png'],
 .map .gm-style img[src^='https://maps.gstatic.com/mapfiles/api-3/images/google_white5.png']{
     display: none;
+}
+
+.lost-success {
+    position: absolute;
+    top: 35%;
+    left: 40%;
+    width: 400px;
+    /*color: #ccc;*/
+    background-color: #c6c6c6;
+    border: 2px solid #d6d6d6;
+    padding: 25px 10px;
+    border-radius: 8px;
+}
+
+.lost-success p {
+    text-align: center;
+    font-weight: 900;
+    color: #fff;
 }
 
 #marker-tooltip {
