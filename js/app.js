@@ -267,6 +267,7 @@ var App = (function () {
         $.ajax({
             url: URL + 'index.php/app/getData',
             success: function (res) {
+                console.log(res);
                 addMarkers(res);
             },
             dataType: 'json',
@@ -419,6 +420,70 @@ var App = (function () {
             });
 
             $this.markers.push(marker);
+
+
+            // add InfoWindow
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+
+                if (!lost) alert('Error: Problem with input.');
+                console.log(lost);
+                // markers[i].additional = markers[i].additional[0];
+
+                var str = '';
+
+                switch (lost.type) {
+
+                    case 'dog':
+                        str = '<div class="iw-title">'+
+                            '<h3>' + lost.name.toUpperCase()  + '</h3>'+
+                            '</div><div class="iw-main ' + lost.type + '-bg">'+
+                            '<img class="lost-img" src="' + URL + 'uploads/animals' + lost.photo +'" alt="' + markers[i].name +'">' +
+                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p>' +
+                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                            '<p><span>Sort: </span><span>' + markers[i].additional['sort']  + '</span></p>' +
+                            '</div>'+
+                            '</div>';
+                        break;
+
+                    case 'cat':
+                        str = '<div class="iw-title">'+
+                            '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
+                            '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
+                            '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
+                            '<p><span>Color: </span><span>' + markers[i].additional['color']  + '</span></p>' +
+                            '</div>'+
+                            '</div>';
+                        break;
+
+                    case 'parrot':
+                        str = '<div class="iw-title">'+
+                            '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
+                            '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
+                            '<img class="lost-img block-center" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
+                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                            '<p><span>Talk: </span><span>' + markers[i].additional['talk']  + '</span></p>' +
+                            '</div>'+
+                            '</div>';
+                        break;
+
+                    case 'default':
+
+                        alert( 'Something goes wrong!!!' );
+
+                }
+
+                var content = '<div id="iw-container" class="info-window" data-id="' + markers[i].id + '">'+
+                    str + '</div>';
+
+                return function () {
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                }
+
+            })(marker, i));
         }
 
     }
@@ -450,15 +515,20 @@ var App = (function () {
         });
     };
 
-    // Deletes all markers in the array by removing references to them.
-    // function deleteMarkers() {
-    //     $($this.markers).each(function () {
-    //         $this.markers[2].setMap(null);
-    //     });
-    //
-    //     markers = [];
-    // }
 
+    App.prototype.searchByMap =   function () {
+        $(document).on('click', '#search-btn', function () {
+            var search = $('#search').val();
+            if (search.length < 2 || !search.legth) alert('Wrong search input!!!');
+        });
+    };
+
+    /**
+     * remove markers
+     * @param map
+     * @param markers
+     * return void
+     */
     function hideMarkers(map, markers) {
         /* Remove All Markers */
         while(markers.length){
@@ -533,10 +603,10 @@ var App = (function () {
 
           $this.markers.push(marker);
 
-
+        // add InfoWindow
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
-              if (!markers[i].additional.length) return false;
+              if (!markers[i].additional.length)  alert('Error: Problem with input.');
               markers[i].additional = markers[i].additional[0];
 
               var str = '';

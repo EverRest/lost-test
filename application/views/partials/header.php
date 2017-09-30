@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <div class="input-group-btn">
                                         <button id="poligon" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-record" aria-hidden="true"></span></button>
                                     </div><!-- /btn-group -->
-                                    <input id="search" name="search" type="text" class="form-control" aria-label="...">
+                                    <input id="search" name="search" type="text" class="form-control" placeholder="Find Your Friend By Search..." aria-label="...">
                                     <div class="input-group-btn">
                                         <button id="search-btn" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search</button>
                                     </div><!-- /btn-group -->
