@@ -33,15 +33,14 @@ nav {
     border-radius: 2px 2px 0 0;
 }
 
-
 .iw-main p {
     margin: 0 auto;
     padding: 5px 0;
 }
 
 .iw-main .iw-text {
-    max-width: 50%;
-    float: right;
+    /*max-width: 50%;*/
+    /*float: right;*/
 }
 
 .gm-style-iw {
@@ -73,7 +72,8 @@ nav {
 .lost-img {
     width: 100px;
     height: 100px;
-    display: inline-block;
+    /*display: inline-block;*/
+    /*float: left;*/
 }
 
 .dz-container {

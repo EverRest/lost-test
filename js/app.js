@@ -259,6 +259,20 @@ var App = (function () {
         });
     };
 
+    getInfo = function () {
+        $.ajax({
+            url: URL + 'index.php/app/getData',
+            success: function (res) {
+                addMarkers(res);
+            },
+            dataType: 'json',
+            error: function (XHR, status, response) {
+                console.log(XHR);
+                console.log(status);
+            }
+        });
+    };
+
     /**
      * render additional fields to lost form
      * return void
@@ -334,6 +348,7 @@ var App = (function () {
 
                 setTimeout(function () {
                     $('.form-msg').remove();
+                    // deleteMarkers();
                     $('#lostModal').find('.close').click();
                     addMarkerEvent();
 
@@ -370,7 +385,7 @@ var App = (function () {
             type: "POST",
             data: lost,
             success: function (data) {
-                console.log(data);
+                if (data.success) window.location.reload();
             },
             dataType: 'json'
         });
@@ -427,6 +442,16 @@ var App = (function () {
         });
     };
 
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }
+
+    /**
+     *  render markers
+     * @param markers
+     */
   function addMarkers( markers ) {
 
       var infowindow = new google.maps.InfoWindow();
@@ -460,10 +485,7 @@ var App = (function () {
         // Apply the desired effect to the close button
           iwCloseBtn.css({
               'opacity': '1', // by default the close button has an opacity of 0.7
-              right: '50px', top: '0px', // button repositioning
-              // 'border': '7px solid #000', // increasing button border and new color
-              // 'border-radius': '13px', // circular effect
-              // 'box-shadow': '0 0 5px #3990B9' // 3D effect to highlight the button
+              right: '50px', top: '0px' // button repositioning
           });
 
         // The API automatically applies 0.7 opacity to the button after the mouseout event.
@@ -487,23 +509,59 @@ var App = (function () {
               icon: 'img/marker.png'
           });
 
-
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
               if (!markers[i].additional.length) return false;
               markers[i].additional = markers[i].additional[0];
 
+              var str = '';
+
+              switch (markers[i].type.name) {
+
+                  case 'dog':
+                      str = '<div class="iw-title">'+
+                            '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
+                            '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                            '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
+                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p>' +
+                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                            '<p><span>Sort: </span><span>' + markers[i].additional['sort']  + '</span></p>' +
+                            '</div>'+
+                            '</div>';
+                      break;
+
+                  case 'cat':
+                      str = '<div class="iw-title">'+
+                          '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
+                          '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                          '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                          '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
+                          '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
+                          '<p><span>Color: </span><span>' + markers[i].additional['color']  + '</span></p>' +
+                          '</div>'+
+                          '</div>';
+                      break;
+
+                  case 'parrot':
+                      str = '<div class="iw-title">'+
+                          '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
+                          '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                          '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
+                          '<img class="lost-img block-center" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
+                          '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                          '<p><span>Talk: </span><span>' + markers[i].additional['talk']  + '</span></p>' +
+                          '</div>'+
+                          '</div>';
+                      break;
+
+                  case 'default':
+
+                      alert( 'Something goes wrong!!!' );
+
+              }
+
               var content = '<div id="iw-container" class="info-window" data-id="' + markers[i].id + '">'+
-                '<div class="iw-title">'+
-                '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
-                '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
-                '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                '<p><span>' + markers[i].name.toUpperCase()  + '</span></p>' +
-                '<p><span>' +  + '</span></p></div>' +
-                '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                '</div>'+
-                '</div>' +
-                '</div>';
+                                    str + '</div>';
 
               return function () {
                   infowindow.setContent(content);

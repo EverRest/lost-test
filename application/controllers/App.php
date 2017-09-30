@@ -88,8 +88,7 @@ class App extends CI_Controller {
             if ($response['success'])
             {
                 $animal = $this->animal->store($post);
-
-                echo '<pre>';print_r($animal);exit;
+                echo json_encode($response);
             }
 
         }
