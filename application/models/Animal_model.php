@@ -17,6 +17,11 @@ class Animal_model extends CI_Model {
         parent::__construct();
     }
 
+    /**
+     * upload photo
+     * @param string $name
+     * @return bool|string
+     */
     public function upload($name = '')
     {
 
@@ -37,6 +42,11 @@ class Animal_model extends CI_Model {
         return false;
     }
 
+    /**
+     * store info about animal
+     * @param array $lost
+     * @return array
+     */
     public function store( $lost = array() )
     {
 
@@ -69,6 +79,11 @@ class Animal_model extends CI_Model {
     }
 
 
+    /**
+     * get additional info to animal
+     * @param bool $type_id
+     * @return string
+     */
     private function getAdditional ($type_id = false)
     {
         if ($type_id === 1) return 'sort';
@@ -76,6 +91,10 @@ class Animal_model extends CI_Model {
         if ($type_id === 3) return 'talk';
     }
 
+    /**
+     * @param int $type_id
+     * @return string
+     */
     private function getType ($type_id = 0)
     {
         if ($type_id == 1) return 'dog';
@@ -83,6 +102,9 @@ class Animal_model extends CI_Model {
         if ($type_id == 3) return 'parrot';
     }
 
+    /**
+     * @return mixed
+     */
     public function getData()
     {
         $query = $this->db->get('animals');
@@ -112,5 +134,37 @@ class Animal_model extends CI_Model {
 
         return $animals;
 
+    }
+
+    /**
+     * @param string $str
+     * @return mixed
+     */
+    public function searchByText( $str = '')
+    {
+        $animals = $this->db->query("SELECT * FROM animals WHERE name LIKE '%$str%'")->result();
+
+        foreach ($animals as $key => $row) {
+            if ($row->id > 0) {
+                $additional = $this->getAdditional($row->type_id);
+                $type = $this->getType($row->type_id);
+
+                $this->db->select(`t2.` . $additional . ` additional`);
+                $this->db->from('animals_' . $type . 's t1');
+                $this->db->join($type . 's t2', 't1.' . $type .'_id = t2.id' );
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $row->additional = $query->result();
+
+                $this->db->select('name');
+                $this->db->from('types');
+                $this->db->where('id', $row->type_id);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $row->type = $query->result()[0];
+
+            }
+        }
+                return $animals;
     }
 }

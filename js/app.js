@@ -64,7 +64,7 @@ var App = (function () {
         $('.map').append(btn).append(search);
         $('body').append(modal);
 
-        addTooltips();
+        // addTooltips();
     };
 
     // render map
@@ -241,14 +241,6 @@ var App = (function () {
         ],
         zoom: 8
     });
-
-    /**
-     * add tooltips to search btns
-     * return void
-     */
-    function addTooltips() {
-
-    }
 
     /**
      * get all server data
@@ -558,11 +550,205 @@ var App = (function () {
         });
     };
 
+    /**
+     * ajax search by text
+     * return void
+     */
+    App.prototype.searchByText =   function () {
 
-    App.prototype.searchByMap =   function () {
         $(document).on('click', '#search-btn', function () {
             var search = $('#search').val();
-            if (search.length < 2 || !search.legth) alert('Wrong search input!!!');
+            if (search.length< 2 || !search.length) alert('Wrong search input!!!');
+
+            $.ajax({
+                url: URL + 'index.php/app/searchByText',
+                type: 'get',
+                data: {
+                   'search': search
+                },
+                success: function (res) {
+                    // render map
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: {lat: -34.397, lng: 150.644},
+                        styles: [
+                            {
+                                "featureType": "road",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "lightness": -100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road",
+                                "elementType": "geometry.stroke",
+                                "stylers": [
+                                    {
+                                        "lightness": -100
+                                    },
+                                    {
+                                        "visibility": "off"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road",
+                                "elementType": "labels.text.fill",
+                                "stylers": [
+                                    {
+                                        "lightness": 100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "road",
+                                "elementType": "labels.text.stroke",
+                                "stylers": [
+                                    {
+                                        "visibility": "off"
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "water",
+                                "stylers": [
+                                    {
+                                        "visibility": "on"
+                                    },
+                                    {
+                                        "saturation": 100
+                                    },
+                                    {
+                                        "hue": "#006eff"
+                                    },
+                                    {
+                                        "lightness": -19
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "landscape",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "saturation": -100
+                                    },
+                                    {
+                                        "lightness": -16
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "hue": "#2bff00"
+                                    },
+                                    {
+                                        "lightness": -39
+                                    },
+                                    {
+                                        "saturation": 8
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.attraction",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "lightness": 100
+                                    },
+                                    {
+                                        "saturation": -100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.business",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "saturation": -100
+                                    },
+                                    {
+                                        "lightness": 100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.government",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "lightness": 100
+                                    },
+                                    {
+                                        "saturation": -100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.medical",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "lightness": 100
+                                    },
+                                    {
+                                        "saturation": -100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.place_of_worship",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "lightness": 100
+                                    },
+                                    {
+                                        "saturation": -100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.school",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "saturation": -100
+                                    },
+                                    {
+                                        "lightness": 100
+                                    }
+                                ]
+                            },
+                            {
+                                "featureType": "poi.sports_complex",
+                                "elementType": "geometry.fill",
+                                "stylers": [
+                                    {
+                                        "saturation": -100
+                                    },
+                                    {
+                                        "lightness": 100
+                                    }
+                                ]
+                            }
+                        ],
+                        zoom: 8
+                    });
+                    addMarkers(res.result);
+                },
+                dataType: 'json',
+                error: function (XHR, status, response) {
+                    console.log(XHR);
+                    console.log(status);
+                }
+            });
         });
     };
 

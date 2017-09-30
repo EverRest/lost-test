@@ -1,10 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class App extends CI_Controller {
+class App extends CI_Controller
+{
 
-
-    public function __construct() {
+    /**
+     * App constructor.
+     * return void
+     */
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model('Animal_model', 'animal');
         $this->load->model('Dog_model', 'dog');
@@ -27,6 +32,10 @@ class App extends CI_Controller {
 		$this->load->view('partials/scripts');
 	}
 
+    /**
+     * store animal to db
+     * return json
+     */
     public function save()
     {
         if (!empty($_POST))
@@ -36,7 +45,6 @@ class App extends CI_Controller {
                 'success' => true,
                 'errors' => 0,
                 'messages' => array(),
-//                'src' => ''
             );
             $post = array();
             // XSS cleaning the $_POST
@@ -94,6 +102,10 @@ class App extends CI_Controller {
         }
 	}
 
+    /**
+     * upload photos
+     * return void
+     */
     public function upload()
     {
         $response = array(
@@ -109,9 +121,43 @@ class App extends CI_Controller {
         echo json_encode($response);
 	}
 
+    /**
+     * get info about all animals
+     * return void
+     */
     public function getData()
     {
         $res = $this->animal->getData();
         echo json_encode($res);
 	}
+
+    public function searchByText()
+    {
+        $response = array(
+            'success' => true,
+            'errors' => 0,
+            'messages' => false,
+            'result' => false
+        );
+
+        $search = '';
+        $result = false;
+
+        if(empty($_GET['search'])) {
+            $response['success'] = false;
+            $response['errors']++;
+        }
+
+        if ($response['success'] && $response['errors'] == 0)
+        {
+            // XSS cleaning the $_GET
+            $this->load->helper("security");
+            $search = $this->security->xss_clean($_GET['search']);
+
+            $result = $this->animal->searchByText($search);
+            $response['result'] = $result;
+        }
+
+        echo json_encode($response);
+    }
 }

@@ -4,7 +4,7 @@
     app.getData();
     app.renderForm();
     app.renderFields();
-    app.searchByMap();
+    app.searchByText();
     app.getFormData();
     app.searchAutocomplete();
 
