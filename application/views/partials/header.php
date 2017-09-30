@@ -21,11 +21,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="col-sm-6 search-wrapper">
                                 <div class="input-group">
                                     <div class="input-group-btn">
-                                        <button id="poligon" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-record" aria-hidden="true"></span></button>
+                                        <button id="poligon" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-tooltip="tooltip" title="Search by poligon, by radius etc"><span class="glyphicon glyphicon-record" aria-hidden="true"></span></button>
                                     </div><!-- /btn-group -->
                                     <input id="search" name="search" type="text" class="form-control" placeholder="Find Your Friend By Search..." aria-label="...">
                                     <div class="input-group-btn">
-                                        <button id="search-btn" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search</button>
+                                        <button id="search-btn" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" data-tooltip="tooltip" aria-haspopup="true" aria-expanded="false" title="Search by text">Search</button>
                                     </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
                             </div><!-- /.col-lg-6 -->

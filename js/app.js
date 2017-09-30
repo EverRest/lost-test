@@ -58,12 +58,13 @@ var App = (function () {
                     '</div>',
 
                 btn = '<button type="button" class="btn btn-success btn-lg btn-add"' +
-                        ' data-toggle="modal" data-target="#lostModal"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>',
+                        ' data-toggle="modal" data-target="#lostModal" data-tooltip="tooltip" title="Add New"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>',
                 search = '<input name="map-search" id="map-search" class="controls col-sm-4" type="text" placeholder="Enter an address...">';
 
         $('.map').append(btn).append(search);
         $('body').append(modal);
 
+        addTooltips();
     };
 
     // render map
@@ -242,6 +243,14 @@ var App = (function () {
     });
 
     /**
+     * add tooltips to search btns
+     * return void
+     */
+    function addTooltips() {
+
+    }
+
+    /**
      * get all server data
      * return void
      */
@@ -277,6 +286,20 @@ var App = (function () {
             }
         });
     };
+
+    /**
+     * helper for tooltips
+     * @param latLng
+     * @param map
+     * @returns {google.maps.Point}
+     */
+    function fromLatLngToPoint(latLng, map) {
+        var topRight = map.getProjection().fromLatLngToPoint(map.getBounds().getNorthEast());
+        var bottomLeft = map.getProjection().fromLatLngToPoint(map.getBounds().getSouthWest());
+        var scale = Math.pow(2, map.getZoom());
+        var worldPoint = map.getProjection().fromLatLngToPoint(latLng);
+        return new google.maps.Point((worldPoint.x - bottomLeft.x) * scale, (worldPoint.y - topRight.y) * scale);
+    }
 
     /**
      * render additional fields to lost form
@@ -353,10 +376,10 @@ var App = (function () {
                 hideMarkers(map, $this.markers);
 
                 setTimeout(function () {
+                    addMarkerEvent();
                     $('.form-msg').remove();
 
                     $('#lostModal').find('.close').click();
-                    addMarkerEvent();
 
                     var issetData = setInterval(function () {
                         if(marker && lost.name && lost.type && lost.additional && lost.photo) {
@@ -368,8 +391,8 @@ var App = (function () {
                         clearInterval(issetData);
                         getInfo();
                         }
-                    }, 3500);
-                }, 2500);
+                    }, 3000);
+                }, 2000);
 
             } else {
                 alert('Please fill all fields!!!')
@@ -404,6 +427,47 @@ var App = (function () {
      */
     function addMarkerEvent() {
 
+        var infowindow = new google.maps.InfoWindow();
+
+        google.maps.event.addListener(infowindow, 'domready', function() {
+
+            // Reference to the DIV which receives the contents of the infowindow using jQuery
+            var iwOuter = $('.gm-style-iw');
+
+            /* The DIV we want to change is above the .gm-style-iw DIV.
+             * So, we use jQuery and create a iwBackground variable,
+             * and took advantage of the existing reference to .gm-style-iw for the previous DIV with .prev().
+             */
+            var iwBackground = iwOuter.prev();
+
+            // Remove the background shadow DIV
+            iwBackground.children(':nth-child(2)').css({'display' : 'none', 'background-color' : 'transparent'}).remove();
+
+            // Remove the white background DIV
+            iwBackground.children(':nth-child(4)').css({'display' : 'none', 'background-color' : 'transparent'}).remove();
+            iwOuter.prev().css({'display' : 'none', 'background-color' : 'transparent'});
+            $('#iw-container').parent('div').css({'overflow':'hidden'});
+
+            // Taking advantage of the already established reference to
+            // div .gm-style-iw with iwOuter variable.
+            // You must set a new variable iwCloseBtn.
+            // Using the .next() method of JQuery you reference the following div to .gm-style-iw.
+            // Is this div that groups the close button elements.
+            var iwCloseBtn = iwOuter.next();
+
+            // Apply the desired effect to the close button
+            iwCloseBtn.css({
+                'opacity': '1', // by default the close button has an opacity of 0.7
+                right: '50px', top: '0px' // button repositioning
+            });
+
+            // The API automatically applies 0.7 opacity to the button after the mouseout event.
+            // This function reverses this event to the desired value.
+            //   iwCloseBtn.mouseout(function(){
+            //       $(this).css({opacity: '1'});
+            //   });
+        });
+
         // This event listener calls addMarker() when the map is clicked.
         google.maps.event.addListener(map, 'click', function(event) {
             if (marker) marker.setMap(null);
@@ -419,63 +483,42 @@ var App = (function () {
                 draggable: true
             });
 
-            $this.markers.push(marker);
 
+
+            //add tootltips
+            // marker.tooltipContent = 'this content should go inside the tooltip';
+
+            $this.markers.push(marker);
+            //
+            // google.maps.event.addListener(marker, 'mouseover', function () {
+            //     console.log();
+            //     var point = fromLatLngToPoint(marker.getPosition(), map);
+            //     $('#marker-tooltip').html(marker.tooltipContent + '<br>Pixel coordinates: ' + point.x + ', ' + point.y).css({
+            //         'left': point.x,
+            //         'top': point.y
+            //     }).show();
+            // });
+            //
+            // google.maps.event.addListener(marker, 'mouseout', function () {
+            //     $('#marker-tooltip').hide();
+            // });
 
             // add InfoWindow
             google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
                 if (!lost) alert('Error: Problem with input.');
-                console.log(lost);
-                // markers[i].additional = markers[i].additional[0];
 
-                var str = '';
-
-                switch (lost.type) {
-
-                    case 'dog':
-                        str = '<div class="iw-title">'+
-                            '<h3>' + lost.name.toUpperCase()  + '</h3>'+
+                var str = '<div class="iw-title">'+
+                            '<h3>' + lost.type.toUpperCase()  + '</h3>'+
                             '</div><div class="iw-main ' + lost.type + '-bg">'+
-                            '<img class="lost-img" src="' + URL + 'uploads/animals' + lost.photo +'" alt="' + markers[i].name +'">' +
-                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p>' +
-                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                            '<p><span>Sort: </span><span>' + markers[i].additional['sort']  + '</span></p>' +
+                            '<img class="lost-img" src="' + URL + 'uploads/animals/' + lost.photo +'" alt="' + lost.name +'">' +
+                            '<p><span>Address: </span><span>( ' + lost.lat + ', ' + lost.lng  + ' )</span></p>' +
+                            '<div class="iw-text"><p><span>Name: </span><stromg>' + lost.name.toUpperCase()  + '</stromg></p>' +
+                            '<p><span>Sort: </span><span>' + lost.additional  + '</span></p>' +
                             '</div>'+
                             '</div>';
-                        break;
 
-                    case 'cat':
-                        str = '<div class="iw-title">'+
-                            '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
-                            '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
-                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
-                            '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                            '<p><span>Color: </span><span>' + markers[i].additional['color']  + '</span></p>' +
-                            '</div>'+
-                            '</div>';
-                        break;
-
-                    case 'parrot':
-                        str = '<div class="iw-title">'+
-                            '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
-                            '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
-                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
-                            '<img class="lost-img block-center" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                            '<p><span>Talk: </span><span>' + markers[i].additional['talk']  + '</span></p>' +
-                            '</div>'+
-                            '</div>';
-                        break;
-
-                    case 'default':
-
-                        alert( 'Something goes wrong!!!' );
-
-                }
-
-                var content = '<div id="iw-container" class="info-window" data-id="' + markers[i].id + '">'+
+                var content = '<div id="iw-container" class="info-window" data-id="0">'+
                     str + '</div>';
 
                 return function () {
@@ -545,7 +588,7 @@ var App = (function () {
 
       var infowindow = new google.maps.InfoWindow();
 
-        if ($this.markers) hideMarkers(map, $this.markers);
+        // if ($this.markers) hideMarkers(map, $this.markers);
 
       google.maps.event.addListener(infowindow, 'domready', function() {
 
@@ -590,6 +633,8 @@ var App = (function () {
 
       for (i = 0; i < markers.length; i++) {
 
+          marker = 0;
+
           if (!markers[i].name && !markers[i].additional.length && !markers[i].type.length &&
               !markers[i].photo && !markers[i].lat && !markers[i].lng) continue;
 
@@ -601,7 +646,22 @@ var App = (function () {
               icon: 'img/marker.png'
           });
 
-          $this.markers.push(marker);
+
+          //add tootltips
+
+          marker.tooltipContent = markers[i].name.toUpperCase();
+
+          // google.maps.event.addListener(marker, 'mouseover', function () {
+          //     var point = fromLatLngToPoint(marker.getPosition(), map);
+          //     $('#marker-tooltip').html(marker.tooltipContent + '<br>Pixel coordinates: ' + point.x + ', ' + point.y).css({
+          //         'left': point.x,
+          //         'top': point.y
+          //     }).show();
+          // });
+
+          google.maps.event.addListener(marker, 'mouseout', function () {
+              $('#marker-tooltip').hide();
+          });
 
         // add InfoWindow
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
@@ -617,9 +677,10 @@ var App = (function () {
                       str = '<div class="iw-title">'+
                             '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
                             '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                            '<div class="iw-text">' +
                             '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
                             '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p>' +
-                            '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                            '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
                             '<p><span>Sort: </span><span>' + markers[i].additional['sort']  + '</span></p>' +
                             '</div>'+
                             '</div>';
@@ -641,9 +702,10 @@ var App = (function () {
                       str = '<div class="iw-title">'+
                           '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
                           '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                          '<div class="iw-text">' +
                           '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
                           '<img class="lost-img block-center" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                          '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
+                          '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
                           '<p><span>Talk: </span><span>' + markers[i].additional['talk']  + '</span></p>' +
                           '</div>'+
                           '</div>';
@@ -667,6 +729,8 @@ var App = (function () {
 
           }
 
+
+        $this.markers.push(marker);
       }
 
     return App;

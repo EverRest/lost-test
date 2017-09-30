@@ -92,6 +92,16 @@ nav {
     display: none;
 }
 
+#marker-tooltip {
+    display: none;
+    position:absolute;
+    width: 100px;
+    height: 40px;
+    background-color: #ccc;
+    margin: 15px;
+    z-index: 20;
+}
+
 .btn-add {
     position: absolute;
     z-index: 10;
