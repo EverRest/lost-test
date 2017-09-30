@@ -259,6 +259,10 @@ var App = (function () {
         });
     };
 
+    /**
+     * get Info from backend
+     * return void
+     */
     getInfo = function () {
         $.ajax({
             url: URL + 'index.php/app/getData',
@@ -345,10 +349,11 @@ var App = (function () {
                 $('#additional').val('');
 
                 $('#lostModal').find('.modal-header').append(mess);
+                hideMarkers(map, $this.markers);
 
                 setTimeout(function () {
                     $('.form-msg').remove();
-                    // deleteMarkers();
+
                     $('#lostModal').find('.close').click();
                     addMarkerEvent();
 
@@ -360,6 +365,7 @@ var App = (function () {
                             save(lost);
 
                         clearInterval(issetData);
+                        getInfo();
                         }
                     }, 3500);
                 }, 2500);
@@ -385,7 +391,7 @@ var App = (function () {
             type: "POST",
             data: lost,
             success: function (data) {
-                if (data.success) window.location.reload();
+                if (data.success) console.log('success');
             },
             dataType: 'json'
         });
@@ -411,6 +417,8 @@ var App = (function () {
                 icon: 'img/marker.png',
                 draggable: true
             });
+
+            $this.markers.push(marker);
         }
 
     }
@@ -443,9 +451,20 @@ var App = (function () {
     };
 
     // Deletes all markers in the array by removing references to them.
-    function deleteMarkers() {
-        clearMarkers();
-        markers = [];
+    // function deleteMarkers() {
+    //     $($this.markers).each(function () {
+    //         $this.markers[2].setMap(null);
+    //     });
+    //
+    //     markers = [];
+    // }
+
+    function hideMarkers(map, markers) {
+        /* Remove All Markers */
+        while(markers.length){
+            markers.pop().setMap(null);
+        }
+
     }
 
     /**
@@ -455,6 +474,8 @@ var App = (function () {
   function addMarkers( markers ) {
 
       var infowindow = new google.maps.InfoWindow();
+
+        if ($this.markers) hideMarkers(map, $this.markers);
 
       google.maps.event.addListener(infowindow, 'domready', function() {
 
@@ -495,11 +516,12 @@ var App = (function () {
         //   });
       });
 
+       $this.markers = [];
 
       for (i = 0; i < markers.length; i++) {
 
-          if (!markers[i].name.length && !markers[i].additional.length && !markers[i].type.length &&
-              !markers[i].photo.length && !markers[i].lat.length && !markers[i].lng.length) continue;
+          if (!markers[i].name && !markers[i].additional.length && !markers[i].type.length &&
+              !markers[i].photo && !markers[i].lat && !markers[i].lng) continue;
 
           var Coordinate = new google.maps.LatLng(1 * markers[i].lat, 1 * markers[i].lng);
 
@@ -508,6 +530,9 @@ var App = (function () {
               map: map,
               icon: 'img/marker.png'
           });
+
+          $this.markers.push(marker);
+
 
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
