@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Час створення: Вер 29 2017 р., 19:06
+-- Час створення: Вер 30 2017 р., 19:07
 -- Версія сервера: 5.6.34-log
 -- Версія PHP: 7.0.14
 
@@ -31,7 +31,7 @@ CREATE TABLE `animals` (
   `name` varchar(20) NOT NULL,
   `type_id` int(11) NOT NULL,
   `photo` varchar(255) NOT NULL,
-  `lng` varchar(20) NOT NULL,
+  `lng` varchar(30) NOT NULL,
   `lat` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -52,7 +52,27 @@ INSERT INTO `animals` (`id`, `name`, `type_id`, `photo`, `lng`, `lat`) VALUES
 (10, 'fdsfdsafsdfsad', 1, 'uploads/animals/IMG_5370.JPG', '149.6942138671875', '-35.101934057246055'),
 (11, 'dfdsfdfsaf', 1, 'uploads/animals/IMG_5370.JPG', '148.7274169921875', '-34.46580632768851'),
 (12, 'fdsfdsfsda', 1, 'uploads/animals/IMG_5370.JPG', '149.161376953125', '-34.96699890670366'),
-(13, 'vcxvxcvxc', 1, 'uploads/animals/IMG_5370.JPG', '149.732666015625', '-34.78222760653012');
+(13, 'vcxvxcvxc', 1, 'uploads/animals/IMG_5370.JPG', '149.732666015625', '-34.78222760653012'),
+(14, 'Lucky', 1, 'uploads/animals/IMG_5370.JPG', '147.6507568359375', '-34.28445325435288'),
+(15, 'Zooolooose', 3, 'uploads/animals/IMG_5370.JPG', '147.1893310546875', '-35.115415314253596'),
+(16, 'Berry', 2, 'uploads/animals/IMG_5370.JPG', '148.677978515625', '-33.61461929233377'),
+(17, 'ghjgkk', 1, 'uploads/animals/IMG_5370.JPG', '148.2330322265625', '-35.00750284295289'),
+(18, 'POlly', 2, 'uploads/animals/IMG_5370.JPG', '148.018798828125', '-34.83634999076384'),
+(19, ',.m nbvnvm,', 3, 'uploads/animals/IMG_5370.JPG', '149.1229248046875', '-34.19362958613085'),
+(20, 'Pedrik', 2, 'uploads/animals/IMG_5370.JPG', '151.116943359375', '-33.86129311351552'),
+(21, 'Booby', 2, 'uploads/animals/IMG_0227.JPG', '148.634033203125', '-32.249974455863295'),
+(22, 'Eddy', 3, 'uploads/animals/IMG_7731.JPG', '148.2989501953125', '-34.307143856288036'),
+(23, 'Pussycat', 2, 'uploads/animals/IMG_5370.JPG', '153.5723876953125', '-34.583475055991755'),
+(24, 'Kerry', 3, 'uploads/animals/IMG_5370.JPG', '152.1221923828125', '-35.44277092585765'),
+(25, 'Valera', 1, 'uploads/animals/IMG_5370.JPG', '152.4737548828125', '-33.6008944080788'),
+(26, 'Byyy', 2, 'uploads/animals/IMG_5370.JPG', '151.7706298828125', '-34.651285198954135'),
+(27, 'Petty', 2, 'uploads/animals/IMG_5370.JPG', '151.6937255859375', '-34.49750272138161'),
+(28, 'ggi', 3, 'uploads/animals/IMG_5370.JPG', '145.8984375', '-32.8795871730663'),
+(29, 'buulby', 2, 'uploads/animals/IMG_5370.JPG', '148.392333984375', '-36.38591277287651'),
+(30, 'Petty', 2, 'uploads/animals/IMG_5370.JPG', '142.305908203125', '-32.41242905441613'),
+(31, 'Duma', 2, 'uploads/animals/IMG_5370.JPG', '144.9700927734375', '-37.84015683604134'),
+(32, 'Nana', 1, 'uploads/animals/IMG_5370.JPG', '148.0902099609375', '-40.02340800226771'),
+(33, 'Poppy', 1, 'uploads/animals/IMG_5370.JPG', '121.9482421875', '-26.470573022375085');
 
 -- --------------------------------------------------------
 
@@ -64,6 +84,22 @@ CREATE TABLE `animals_cats` (
   `animal_id` int(11) NOT NULL DEFAULT '0',
   `cat_id` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп даних таблиці `animals_cats`
+--
+
+INSERT INTO `animals_cats` (`animal_id`, `cat_id`) VALUES
+(16, 1),
+(18, 2),
+(20, 3),
+(21, 4),
+(23, 5),
+(26, 6),
+(27, 7),
+(29, 8),
+(30, 9),
+(31, 10);
 
 -- --------------------------------------------------------
 
@@ -82,7 +118,12 @@ CREATE TABLE `animals_dogs` (
 
 INSERT INTO `animals_dogs` (`animal_id`, `dog_id`) VALUES
 (12, 2),
-(13, 3);
+(13, 3),
+(14, 4),
+(17, 5),
+(25, 6),
+(32, 7),
+(33, 8);
 
 -- --------------------------------------------------------
 
@@ -95,6 +136,17 @@ CREATE TABLE `animals_parrots` (
   `parrot_id` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Дамп даних таблиці `animals_parrots`
+--
+
+INSERT INTO `animals_parrots` (`animal_id`, `parrot_id`) VALUES
+(15, 1),
+(19, 2),
+(22, 3),
+(24, 4),
+(28, 5);
+
 -- --------------------------------------------------------
 
 --
@@ -105,6 +157,22 @@ CREATE TABLE `cats` (
   `id` int(11) NOT NULL,
   `color` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп даних таблиці `cats`
+--
+
+INSERT INTO `cats` (`id`, `color`) VALUES
+(1, 'rudy'),
+(2, 'nice'),
+(3, 'blue'),
+(4, 'blue'),
+(5, 'terracot'),
+(6, 'silver'),
+(7, 'candy'),
+(8, 'white'),
+(9, 'catty'),
+(10, 'lovely');
 
 -- --------------------------------------------------------
 
@@ -124,7 +192,12 @@ CREATE TABLE `dogs` (
 INSERT INTO `dogs` (`id`, `sort`) VALUES
 (1, 'fasfdsfa'),
 (2, 'sdafdsfsadf'),
-(3, 'dcxzcxzcxzc');
+(3, 'dcxzcxzcxzc'),
+(4, 'doberman'),
+(5, 'm,nmnbnm.'),
+(6, 'hasky'),
+(7, 'Huuuuu'),
+(8, 'Catu');
 
 -- --------------------------------------------------------
 
@@ -136,6 +209,17 @@ CREATE TABLE `parrots` (
   `id` int(11) NOT NULL,
   `talk` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп даних таблиці `parrots`
+--
+
+INSERT INTO `parrots` (`id`, `talk`) VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1);
 
 -- --------------------------------------------------------
 
@@ -221,22 +305,22 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT для таблиці `animals`
 --
 ALTER TABLE `animals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT для таблиці `cats`
 --
 ALTER TABLE `cats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT для таблиці `dogs`
 --
 ALTER TABLE `dogs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT для таблиці `parrots`
 --
 ALTER TABLE `parrots`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT для таблиці `types`
 --

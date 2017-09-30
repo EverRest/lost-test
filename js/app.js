@@ -541,7 +541,7 @@ var App = (function () {
         });
     };
 
-    App.prototype.initPreloader =   function () {
+    function initPreloader () {
         setTimeout(function () {
             $('.loader').hide('fast');
             $('.map').show('fast');

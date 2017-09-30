@@ -107,6 +107,12 @@ class Animal_model extends CI_Model {
      */
     public function getData()
     {
+
+//        $animals = $this->db->query("SELECT a.*
+//                                      FROM animals a
+//                                      LEFT JOIN
+//                                      ")->result();
+
         $query = $this->db->get('animals');
         $animals = $query->result();
 
