@@ -70,10 +70,10 @@ class Animal_model extends CI_Model {
         $data['id'] = $this->db->insert_id();
 
 
-        $this->db->insert($lost['type'] . 's', array($this->getAdditional($data['type_id']) => $lost['additional']));
+        $this->db->insert($lost['type'] . 's', array('info' => $lost['additional']));
         $data[$lost['type'].'_id'] = $this->db->insert_id();
 
-        $this->db->insert('animals_' . $lost['type'] . 's', array('animal_id' => $data['id'], $lost['type'] . '_id' => $data[$lost['type'].'_id']));
+        $this->db->insert('animals_' . $lost['type'] . 's', array('animal_id' => $data['id'], 'id' => $data[$lost['type'].'_id']));
 
         return $data;
     }
@@ -108,31 +108,30 @@ class Animal_model extends CI_Model {
     public function getData()
     {
 
-//        $animals = $this->db->query("SELECT a.*
-//                                      FROM animals a
-//                                      LEFT JOIN
-//                                      ")->result();
-
         $query = $this->db->get('animals');
         $animals = $query->result();
 
         foreach ($animals as $key => $row) {
             if ($row->id > 0) {
+
                 $additional = $this->getAdditional($row->type_id);
                 $type = $this->getType($row->type_id);
 
-                $this->db->select(`t2.` . $additional . ` additional`);
-                $this->db->from('animals_' . $type . 's t1');
-                $this->db->join($type . 's t2', 't1.' . $type .'_id = t2.id' );
-                $this->db->limit(1);
-                $query = $this->db->get();
-                $row->additional = $query->result();
+
+                $row->additional = $this->db->query("SELECT t2.info 
+                                      FROM animals_" . $type . "s t1
+                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
+                                      WHERE t1.animal_id=" . $row->id ."
+                                      LIMIT 1
+                                      ")->result();
+
 
                 $this->db->select('name');
                 $this->db->from('types');
                 $this->db->where('id', $row->type_id);
                 $this->db->limit(1);
                 $query = $this->db->get();
+
                 $row->type = $query->result()[0];
 
             }
@@ -155,12 +154,12 @@ class Animal_model extends CI_Model {
                 $additional = $this->getAdditional($row->type_id);
                 $type = $this->getType($row->type_id);
 
-                $this->db->select(`t2.` . $additional . ` additional`);
-                $this->db->from('animals_' . $type . 's t1');
-                $this->db->join($type . 's t2', 't1.' . $type .'_id = t2.id' );
-                $this->db->limit(1);
-                $query = $this->db->get();
-                $row->additional = $query->result();
+                $row->additional = $this->db->query("SELECT t2.info 
+                                      FROM animals_" . $type . "s t1
+                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
+                                      WHERE t1.animal_id=" . $row->id ."
+                                      LIMIT 1
+                                      ")->result();
 
                 $this->db->select('name');
                 $this->db->from('types');

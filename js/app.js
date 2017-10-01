@@ -833,24 +833,16 @@ var App = (function () {
 
           //add tootltips
 
-          marker.tooltipContent = markers[i].name.toUpperCase();
+          // marker.tooltipContent = markers[i].name.toUpperCase();
 
-          // google.maps.event.addListener(marker, 'mouseover', function () {
-          //     var point = fromLatLngToPoint(marker.getPosition(), map);
-          //     $('#marker-tooltip').html(marker.tooltipContent + '<br>Pixel coordinates: ' + point.x + ', ' + point.y).css({
-          //         'left': point.x,
-          //         'top': point.y
-          //     }).show();
+          // google.maps.event.addListener(marker, 'mouseout', function () {
+          //     $('#marker-tooltip').hide();
           // });
-
-          google.maps.event.addListener(marker, 'mouseout', function () {
-              $('#marker-tooltip').hide();
-          });
 
         // add InfoWindow
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
-              if (!markers[i].additional.length)  alert('Error: Problem with input.');
+              if (!markers[i].additional) console.log('empty additional info');
               markers[i].additional = markers[i].additional[0];
 
               var str = '';
@@ -865,7 +857,7 @@ var App = (function () {
                             '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
                             '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p>' +
                             '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                            '<p><span>Sort: </span><span>' + markers[i].additional['sort']  + '</span></p>' +
+                            '<p><span>Sort: </span><span>' + markers[i].additional.info + '</span></p>' +
                             '</div>'+
                             '</div>';
                       break;
@@ -877,7 +869,7 @@ var App = (function () {
                           '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
                           '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
                           '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                          '<p><span>Color: </span><span>' + markers[i].additional['color']  + '</span></p>' +
+                          '<p><span>Color: </span><span>' + markers[i].additional.info  + '</span></p>' +
                           '</div>'+
                           '</div>';
                       break;
@@ -890,7 +882,7 @@ var App = (function () {
                           '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
                           '<img class="lost-img block-center" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
                           '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                          '<p><span>Talk: </span><span>' + markers[i].additional['talk']  + '</span></p>' +
+                          '<p><span>Talk: </span><span>' + markers[i].additional.info  + '</span></p>' +
                           '</div>'+
                           '</div>';
                       break;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Час створення: Вер 30 2017 р., 19:07
+-- Час створення: Жов 01 2017 р., 12:45
 -- Версія сервера: 5.6.34-log
 -- Версія PHP: 7.0.14
 
@@ -40,17 +40,6 @@ CREATE TABLE `animals` (
 --
 
 INSERT INTO `animals` (`id`, `name`, `type_id`, `photo`, `lng`, `lat`) VALUES
-(1, 'уцкуцкцукй', 1, 'uploads/animals/a97f2901e192ad169dad2e44d36b56bd_view.jpg', '149.1229248046875', '-35.30840140169162'),
-(2, 'mnvbn', 2, 'uploads/animals/IMG_5370.JPG', '149.798583984375', '-34.75966612466248'),
-(3, 'fdsfsafs', 2, 'uploads/animals/IMG_5370.JPG', '149.4580078125', '-34.70549341022545'),
-(4, 'dsfasfsadf', 1, 'uploads/animals/IMG_5370.JPG', '149.8150634765625', '-34.624167789904895'),
-(5, 'vzvcvz', 2, 'uploads/animals/IMG_5370.JPG', '149.1229248046875', '-35.30391856531168'),
-(6, 'vcxvxcvz', 1, 'uploads/animals/IMG_5370.JPG', '149.7821044921875', '-34.50655662164559'),
-(7, 'fdsfsdfsad', 1, 'uploads/animals/IMG_5370.JPG', '150.27099609375', '-34.09361045276871'),
-(8, 'dsafsdfasd', 1, 'uploads/animals/IMG_5370.JPG', '149.534912109375', '-34.474863669009004'),
-(9, 'dsfsdffdsa', 1, 'uploads/animals/IMG_5370.JPG', '149.468994140625', '-34.96699890670366'),
-(10, 'fdsfdsafsdfsad', 1, 'uploads/animals/IMG_5370.JPG', '149.6942138671875', '-35.101934057246055'),
-(11, 'dfdsfdfsaf', 1, 'uploads/animals/IMG_5370.JPG', '148.7274169921875', '-34.46580632768851'),
 (12, 'fdsfdsfsda', 1, 'uploads/animals/IMG_5370.JPG', '149.161376953125', '-34.96699890670366'),
 (13, 'vcxvxcvxc', 1, 'uploads/animals/IMG_5370.JPG', '149.732666015625', '-34.78222760653012'),
 (14, 'Lucky', 1, 'uploads/animals/IMG_5370.JPG', '147.6507568359375', '-34.28445325435288'),
@@ -82,14 +71,14 @@ INSERT INTO `animals` (`id`, `name`, `type_id`, `photo`, `lng`, `lat`) VALUES
 
 CREATE TABLE `animals_cats` (
   `animal_id` int(11) NOT NULL DEFAULT '0',
-  `cat_id` int(11) NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп даних таблиці `animals_cats`
 --
 
-INSERT INTO `animals_cats` (`animal_id`, `cat_id`) VALUES
+INSERT INTO `animals_cats` (`animal_id`, `id`) VALUES
 (16, 1),
 (18, 2),
 (20, 3),
@@ -109,14 +98,14 @@ INSERT INTO `animals_cats` (`animal_id`, `cat_id`) VALUES
 
 CREATE TABLE `animals_dogs` (
   `animal_id` int(11) NOT NULL DEFAULT '0',
-  `dog_id` int(11) NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп даних таблиці `animals_dogs`
 --
 
-INSERT INTO `animals_dogs` (`animal_id`, `dog_id`) VALUES
+INSERT INTO `animals_dogs` (`animal_id`, `id`) VALUES
 (12, 2),
 (13, 3),
 (14, 4),
@@ -133,14 +122,14 @@ INSERT INTO `animals_dogs` (`animal_id`, `dog_id`) VALUES
 
 CREATE TABLE `animals_parrots` (
   `animal_id` int(11) NOT NULL DEFAULT '0',
-  `parrot_id` int(11) NOT NULL DEFAULT '0'
+  `id` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп даних таблиці `animals_parrots`
 --
 
-INSERT INTO `animals_parrots` (`animal_id`, `parrot_id`) VALUES
+INSERT INTO `animals_parrots` (`animal_id`, `id`) VALUES
 (15, 1),
 (19, 2),
 (22, 3),
@@ -155,14 +144,14 @@ INSERT INTO `animals_parrots` (`animal_id`, `parrot_id`) VALUES
 
 CREATE TABLE `cats` (
   `id` int(11) NOT NULL,
-  `color` varchar(20) NOT NULL
+  `info` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп даних таблиці `cats`
 --
 
-INSERT INTO `cats` (`id`, `color`) VALUES
+INSERT INTO `cats` (`id`, `info`) VALUES
 (1, 'rudy'),
 (2, 'nice'),
 (3, 'blue'),
@@ -182,15 +171,14 @@ INSERT INTO `cats` (`id`, `color`) VALUES
 
 CREATE TABLE `dogs` (
   `id` int(11) NOT NULL,
-  `sort` varchar(20) NOT NULL
+  `info` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп даних таблиці `dogs`
 --
 
-INSERT INTO `dogs` (`id`, `sort`) VALUES
-(1, 'fasfdsfa'),
+INSERT INTO `dogs` (`id`, `info`) VALUES
 (2, 'sdafdsfsadf'),
 (3, 'dcxzcxzcxzc'),
 (4, 'doberman'),
@@ -207,14 +195,14 @@ INSERT INTO `dogs` (`id`, `sort`) VALUES
 
 CREATE TABLE `parrots` (
   `id` int(11) NOT NULL,
-  `talk` tinyint(1) DEFAULT NULL
+  `info` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп даних таблиці `parrots`
 --
 
-INSERT INTO `parrots` (`id`, `talk`) VALUES
+INSERT INTO `parrots` (`id`, `info`) VALUES
 (1, 1),
 (2, 1),
 (3, 1),
@@ -256,22 +244,22 @@ ALTER TABLE `animals`
 -- Індекси таблиці `animals_cats`
 --
 ALTER TABLE `animals_cats`
-  ADD PRIMARY KEY (`animal_id`,`cat_id`),
-  ADD KEY `cat_id` (`cat_id`);
+  ADD PRIMARY KEY (`animal_id`,`id`),
+  ADD KEY `cat_id` (`id`);
 
 --
 -- Індекси таблиці `animals_dogs`
 --
 ALTER TABLE `animals_dogs`
-  ADD PRIMARY KEY (`animal_id`,`dog_id`),
-  ADD KEY `dog_id` (`dog_id`);
+  ADD PRIMARY KEY (`animal_id`,`id`),
+  ADD KEY `dog_id` (`id`);
 
 --
 -- Індекси таблиці `animals_parrots`
 --
 ALTER TABLE `animals_parrots`
-  ADD PRIMARY KEY (`animal_id`,`parrot_id`),
-  ADD KEY `parrot_id` (`parrot_id`);
+  ADD PRIMARY KEY (`animal_id`,`id`),
+  ADD KEY `parrot_id` (`id`);
 
 --
 -- Індекси таблиці `cats`
@@ -341,21 +329,21 @@ ALTER TABLE `animals`
 --
 ALTER TABLE `animals_cats`
   ADD CONSTRAINT `animals_cats_ibfk_1` FOREIGN KEY (`animal_id`) REFERENCES `animals` (`id`),
-  ADD CONSTRAINT `animals_cats_ibfk_2` FOREIGN KEY (`cat_id`) REFERENCES `cats` (`id`);
+  ADD CONSTRAINT `animals_cats_ibfk_2` FOREIGN KEY (`id`) REFERENCES `cats` (`id`);
 
 --
 -- Обмеження зовнішнього ключа таблиці `animals_dogs`
 --
 ALTER TABLE `animals_dogs`
   ADD CONSTRAINT `animals_dogs_ibfk_1` FOREIGN KEY (`animal_id`) REFERENCES `animals` (`id`),
-  ADD CONSTRAINT `animals_dogs_ibfk_2` FOREIGN KEY (`dog_id`) REFERENCES `dogs` (`id`);
+  ADD CONSTRAINT `animals_dogs_ibfk_2` FOREIGN KEY (`id`) REFERENCES `dogs` (`id`);
 
 --
 -- Обмеження зовнішнього ключа таблиці `animals_parrots`
 --
 ALTER TABLE `animals_parrots`
   ADD CONSTRAINT `animals_parrots_ibfk_1` FOREIGN KEY (`animal_id`) REFERENCES `animals` (`id`),
-  ADD CONSTRAINT `animals_parrots_ibfk_2` FOREIGN KEY (`parrot_id`) REFERENCES `parrots` (`id`);
+  ADD CONSTRAINT `animals_parrots_ibfk_2` FOREIGN KEY (`id`) REFERENCES `parrots` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
