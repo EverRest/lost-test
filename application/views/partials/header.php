@@ -21,10 +21,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="col-sm-6 search-wrapper">
                                 <div class="input-group">
                                     <div class="input-group-btn">
-                                        <button id="poligon" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-tooltip="tooltip" title="Search by poligon"><span class="glyphicon glyphicon-flash" aria-hidden="true"></span></button>
+                                        <button id="polygon-btn" type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-tooltip="tooltip" title="Search by poligon"><span class="glyphicon glyphicon-flash" aria-hidden="true"></span></button>
                                     </div><!-- /btn-group -->
                                     <div class="input-group-btn">
-                                        <button id="rdius" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-tooltip="tooltip" title="Search by radius"><span class="glyphicon glyphicon-record" aria-hidden="true"></span></button>
+                                        <button id="radius-btn" type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  data-tooltip="tooltip" title="Search by radius"><span class="glyphicon glyphicon-record" aria-hidden="true"></span></button>
                                     </div><!-- /btn-group -->
                                     <input id="search" name="search" type="text" class="form-control" placeholder="Find Your Friend By Name..." aria-label="...">
                                     <div class="input-group-btn">

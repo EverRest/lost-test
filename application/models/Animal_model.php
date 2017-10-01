@@ -42,6 +42,42 @@ class Animal_model extends CI_Model {
         return false;
     }
 
+    public function searchByRadius($coords = array(), $radius = 0)
+    {
+        $animals = $this->db->query("SELECT *, 
+                                    ( 3959 * acos( cos( radians(" . $this->db->escape_str($coords['lat']) . ") ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(" . $this->db->escape_str($coords['lng']) . ") ) + sin( radians(" . $this->db->escape_str($coords['lng']) . ") ) * sin( radians( lat ) ) ) ) AS distance 
+                                    FROM animals HAVING distance < " . $this->db->escape_str($radius) . " ORDER BY distance")->result();
+
+
+        foreach ($animals as $key => $row) {
+            if ($row->id > 0) {
+
+                $additional = $this->getAdditional($row->type_id);
+                $type = $this->getType($row->type_id);
+
+
+                $row->additional = $this->db->query("SELECT t2.info 
+                                      FROM animals_" . $type . "s t1
+                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
+                                      WHERE t1.animal_id=" . $row->id ."
+                                      LIMIT 1
+                                      ")->result();
+
+
+                $this->db->select('name');
+                $this->db->from('types');
+                $this->db->where('id', $row->type_id);
+                $this->db->limit(1);
+                $query = $this->db->get();
+
+                $row->type = $query->result()[0];
+
+            }
+        }
+
+        return $animals;
+    }
+
     /**
      * store info about animal
      * @param array $lost

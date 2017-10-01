@@ -160,4 +160,39 @@ class App extends CI_Controller
 
         echo json_encode($response);
     }
+
+    public function searchByRadius()
+    {
+        $response = array(
+            'success' => true,
+            'errors' => 0,
+            'messages' => false,
+            'result' => false
+        );
+
+        $radius = 0;
+        $coords = array();
+        $result = false;
+
+        if(empty($_GET['lat']) || empty($_GET['lng']) || empty($_GET['radius'])) {
+            $response['success'] = false;
+            $response['errors']++;
+        }
+
+        if ($response['success'] && $response['errors'] == 0)
+        {
+            // XSS cleaning the $_GET
+
+            $this->load->helper("security");
+            $coords['lat'] = $this->security->xss_clean($_GET['lat']);
+            $coords['lng'] = $this->security->xss_clean($_GET['lng']);
+            $radius = $this->security->xss_clean($_GET['radius']);
+
+            $result = $this->animal->searchByRadius($coords, $radius);
+            $response['result'] = $result;
+        }
+
+        echo json_encode($response);
+
+    }
 }

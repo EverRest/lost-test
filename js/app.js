@@ -7,70 +7,8 @@ var App = (function () {
         marker,
         infowindow = {},
         markers = [],
-        URL = $('main').data('url');
-
-    function App() {
-        if (!app) {
-            app = this;
-        } else {
-            return app;
-        }
-    }
-
-    /**
-     * render lost form, address search input, button to adding lost pet
-     * return void
-     */
-    App.prototype.renderForm = function () {
-        var modal = '<div id="lostModal" class="modal fade" role="dialog">' +
-                    '<div class="modal-dialog">' +
-                    '<div class="modal-content">' +
-                    '<div class="modal-header">' +
-                    '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
-                    '<h4 class="modal-title">Add Lost Friend</h4>' +
-                    '</div>' +
-                    '<div class="modal-body">' +
-                    '<form id="modalForm" method="POST" enctype="multipart/form-data" class="form-horizontal">' +
-                    '<div class="form-group">' +
-                    '<label class="control-label col-sm-2" for="name">Name:</label>' +
-                    '<div class="col-sm-10">' +
-                    '<input type="text" name="name" class="form-control" id="name" placeholder="Enter name">' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                    '<label class="control-label col-sm-2" for="sel1">Type:</label>' +
-                    '<div class="col-sm-10">' +
-                    '<select name="type" id="type" class="select form-control" required>' +
-                    '<option disabled selected value="default">check type</option>' +
-                    '<option value="dog">dog</option>' +
-                    '<option value="cat">cat</option>' +
-                    '<option value="parrot">parrot</option>' +
-                    '</select>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div action="' + URL + 'index.php/app/upload" class="dz-container dropzone">' +
-                    '</div>' +
-                    '<button type="submit" class="btn btn-lg btn-info center-block form-btn">Find!</button>' +
-                    '</form>' +
-                    '</form>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>',
-
-                btn = '<button type="button" class="btn btn-success btn-lg btn-add"' +
-                        ' data-toggle="modal" data-target="#lostModal" data-tooltip="tooltip" title="Add New"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>',
-                search = '<input name="map-search" id="map-search" class="controls col-sm-4" type="text" placeholder="Enter an address...">';
-
-        $('.map').append(btn).append(search);
-        $('body').append(modal);
-
-        // addTooltips();
-    };
-
-    // render map
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644},
-        styles: [
+        URL = $('main').data('url'),
+        mapStyles = [
             {
                 "featureType": "road",
                 "elementType": "geometry.fill",
@@ -238,7 +176,70 @@ var App = (function () {
                     }
                 ]
             }
-        ],
+        ];
+
+    function App() {
+        if (!app) {
+            app = this;
+        } else {
+            return app;
+        }
+    }
+
+    /**
+     * render lost form, address search input, button to adding lost pet
+     * return void
+     */
+    App.prototype.renderForm = function () {
+        var modal = '<div id="lostModal" class="modal fade" role="dialog">' +
+                    '<div class="modal-dialog">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header">' +
+                    '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
+                    '<h4 class="modal-title">Add Lost Friend</h4>' +
+                    '</div>' +
+                    '<div class="modal-body">' +
+                    '<form id="modalForm" method="POST" enctype="multipart/form-data" class="form-horizontal">' +
+                    '<div class="form-group">' +
+                    '<label class="control-label col-sm-2" for="name">Name:</label>' +
+                    '<div class="col-sm-10">' +
+                    '<input type="text" name="name" class="form-control" id="name" placeholder="Enter name">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label class="control-label col-sm-2" for="sel1">Type:</label>' +
+                    '<div class="col-sm-10">' +
+                    '<select name="type" id="type" class="select form-control" required>' +
+                    '<option disabled selected value="default">check type</option>' +
+                    '<option value="dog">dog</option>' +
+                    '<option value="cat">cat</option>' +
+                    '<option value="parrot">parrot</option>' +
+                    '</select>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div action="' + URL + 'index.php/app/upload" class="dz-container dropzone">' +
+                    '</div>' +
+                    '<button type="submit" class="btn btn-lg btn-info center-block form-btn">Find!</button>' +
+                    '</form>' +
+                    '</form>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>',
+
+                btn = '<button type="button" class="btn btn-success btn-lg btn-add"' +
+                        ' data-toggle="modal" data-target="#lostModal" data-tooltip="tooltip" title="Add New"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>',
+                search = '<input name="map-search" id="map-search" class="controls col-sm-4" type="text" placeholder="Enter an address...">';
+
+        $('.map').append(btn).append(search);
+        $('body').append(modal);
+
+        // addTooltips();
+    };
+
+    // render map
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -34.397, lng: 150.644},
+        styles: mapStyles,
         zoom: 8
     });
 
@@ -515,6 +516,347 @@ var App = (function () {
     }
 
     /**
+     * search by polygon
+     * return void
+     */
+    App.prototype.searchByPolygon =   function () {
+        $(document).on('click', '#polygon-btn', function () {
+            hideMarkers(map, $this.markers);
+            console.log('open polygon search');
+
+            $(document).on('click', '#polygon-btn', function () {
+                console.log('close polygon search');
+                getInfo();
+            });
+        });
+    };
+
+    /**
+     * search by radius
+     * return void
+     */
+    App.prototype.searchByRadius =   function () {
+
+        $(document).on('click', '#radius-btn', function () {
+            var circle, marker, center;
+            setCenter = true;
+            hideMarkers(map, $this.markers);
+
+            circleOptions = {
+                fillColor:"#d4d4d4",
+                fillOpacity:0.5,
+                strokeColor:"#f3f3f3",
+                strokeOpacity:0.8,
+                strokeWeight:3,
+                clickable:false
+            };
+
+            google.maps.event.addListener(map, 'click', function(event) {
+                if (setCenter) {
+                    if (marker != undefined) {
+                        marker.setMap(null);
+                    }
+                    marker = new google.maps.Marker({
+                        position: event.latLng,
+                        clickable:false,
+                        icon: URL + 'img/circle-center.png'
+                    });
+                    marker.setMap(map);
+                    circleOptions.center = event.latLng;
+                    setCenter = false;
+                }
+                else {
+                    var radius = distHaversine(circleOptions.center, event.latLng);
+                    circleOptions.radius = radius*1000;
+                    if (circle != undefined) {
+                        circle.setMap(null);
+                    }
+                    circle = new google.maps.Circle(circleOptions);
+                    circle.setMap(map);
+
+                    setCenter = true;
+
+                    filterByRadius( circleOptions.center.lat(), circleOptions.center.lng(), radius);
+
+                }
+            });
+        });
+        /**
+         * filter animal by radius
+         * @param radius
+         * @param lat
+         * @param lng
+         */
+        function filterByRadius (lat, lng, radius) {
+            if (radius && lat && lng) {
+                $.ajax({
+                    url: URL + 'index.php/app/searchByRadius',
+                    type: 'get',
+                    data: {
+                        'lat': lat,
+                        'lng': lng,
+                        'radius': radius
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        // if (res.success) {
+                        //     hideMarkers(map, $this.markers);
+                        //     addMarkers(res.result);
+                        // } else {
+                        //     alert('Error: Wrong Input!');
+                        // }
+                        // render map
+                        // map = new google.maps.Map(document.getElementById('map'), {
+                        //     center: {lat: -34.397, lng: 150.644},
+                        //     styles: mapStyles,
+                        //     zoom: 8
+                        // });
+                    },
+                    dataType: 'json',
+                    error: function (XHR, status, response) {
+                        console.log(XHR);
+                        console.log(status);
+                    }
+                });
+            } else {
+                alert('Wrong input');
+            }
+
+        }
+
+        /**
+         *
+         * @param coords
+         * @param radius
+         * return void
+         */
+        // function filterByRadius ( coords, radius ) {
+        //
+        //     if (radius && coords) {
+        //         $.ajax({
+        //             url: URL + 'index.php/app/searchByRadius',
+        //             type: 'get',
+        //             data: {
+        //                 'coords': coords,
+        //                 'radius': radius
+        //             },
+        //             success: function (res) {
+        //                 // render map
+        //                 map = new google.maps.Map(document.getElementById('map'), {
+        //                     center: {lat: -34.397, lng: 150.644},
+        //                     styles: [
+        //                         {
+        //                             "featureType": "road",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "lightness": -100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "road",
+        //                             "elementType": "geometry.stroke",
+        //                             "stylers": [
+        //                                 {
+        //                                     "lightness": -100
+        //                                 },
+        //                                 {
+        //                                     "visibility": "off"
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "road",
+        //                             "elementType": "labels.text.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "lightness": 100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "road",
+        //                             "elementType": "labels.text.stroke",
+        //                             "stylers": [
+        //                                 {
+        //                                     "visibility": "off"
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "water",
+        //                             "stylers": [
+        //                                 {
+        //                                     "visibility": "on"
+        //                                 },
+        //                                 {
+        //                                     "saturation": 100
+        //                                 },
+        //                                 {
+        //                                     "hue": "#006eff"
+        //                                 },
+        //                                 {
+        //                                     "lightness": -19
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "landscape",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "saturation": -100
+        //                                 },
+        //                                 {
+        //                                     "lightness": -16
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "hue": "#2bff00"
+        //                                 },
+        //                                 {
+        //                                     "lightness": -39
+        //                                 },
+        //                                 {
+        //                                     "saturation": 8
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi.attraction",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "lightness": 100
+        //                                 },
+        //                                 {
+        //                                     "saturation": -100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi.business",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "saturation": -100
+        //                                 },
+        //                                 {
+        //                                     "lightness": 100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi.government",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "lightness": 100
+        //                                 },
+        //                                 {
+        //                                     "saturation": -100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi.medical",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "lightness": 100
+        //                                 },
+        //                                 {
+        //                                     "saturation": -100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi.place_of_worship",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "lightness": 100
+        //                                 },
+        //                                 {
+        //                                     "saturation": -100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi.school",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "saturation": -100
+        //                                 },
+        //                                 {
+        //                                     "lightness": 100
+        //                                 }
+        //                             ]
+        //                         },
+        //                         {
+        //                             "featureType": "poi.sports_complex",
+        //                             "elementType": "geometry.fill",
+        //                             "stylers": [
+        //                                 {
+        //                                     "saturation": -100
+        //                                 },
+        //                                 {
+        //                                     "lightness": 100
+        //                                 }
+        //                             ]
+        //                         }
+        //                     ],
+        //                     zoom: 8
+        //                 });
+        //                 addMarkers(res.result);
+        //             },
+        //             dataType: 'json',
+        //             error: function (XHR, status, response) {
+        //                 console.log(XHR);
+        //                 console.log(status);
+        //             }
+        //         });
+        //     } else {
+        //         alert('Wrong input');
+        //     }
+        // }
+
+        /**
+         * to radians
+         * @param x
+         * @returns {number}
+         */
+        rad = function(x) {
+            return x*Math.PI/180;
+        };
+
+        /**
+         * @param p1
+         * @param p2
+         * @returns {string}
+         */
+        distHaversine = function(p1, p2) {
+            var R = 6371; // earth's mean radius in km
+            var dLat  = rad(p2.lat() - p1.lat());
+            var dLong = rad(p2.lng() - p1.lng());
+
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(rad(p1.lat())) * Math.cos(rad(p2.lat())) * Math.sin(dLong/2) * Math.sin(dLong/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var d = R * c;
+
+            return d.toFixed(3);
+        };
+    };
+
+    /**
      * search autocomplete
      * return void
      */
@@ -541,6 +883,9 @@ var App = (function () {
         });
     };
 
+    /**
+     * return void
+     */
     function initPreloader () {
         setTimeout(function () {
             $('.loader').hide('fast');
