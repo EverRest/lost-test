@@ -521,15 +521,44 @@ var App = (function () {
      */
     App.prototype.searchByPolygon =   function () {
         $(document).on('click', '#polygon-btn', function () {
+            poly = new google.maps.Polyline({
+                strokeColor: '#00DB00',
+                strokeOpacity: 1.0,
+                strokeWeight: 3,
+                fillColor: '#00DB00',
+                fillOpacity: 0.05
+            });
+
             hideMarkers(map, $this.markers);
-            console.log('open polygon search');
+            poly.setMap(map);
+            map.addListener('click', addLatLng);
 
             $(document).on('click', '#polygon-btn', function () {
-                console.log('close polygon search');
-                getInfo();
+                window.location.reload();
             });
         });
     };
+
+    /**
+     * new point to polygon
+     * @param event
+     */
+    function addLatLng(event) {
+        var path = poly.getPath();
+        if(path.length==4){
+            var polygonOptions={path:path,strokeColor:"#00DB00",fillColor:"#DBDB08"};
+            var polygon=new google.maps.Polygon(polygonOptions);
+            polygon.setMap(map);
+        }
+
+        path.push(event.latLng);
+        var marker = new google.maps.Marker({
+            position: event.latLng,
+            title: '#' + path.getLength(),
+            map: map,
+            icon: URL + 'img/polygon-marker.png'
+        });
+    }
 
     /**
      * search by radius
@@ -552,6 +581,11 @@ var App = (function () {
             };
 
             google.maps.event.addListener(map, 'click', function(event) {
+
+                $(document).on('click', '#radius-btn', function () {
+                    window.location.reload();
+                });
+
                 if (setCenter) {
                     if (marker != undefined) {
                         marker.setMap(null);
