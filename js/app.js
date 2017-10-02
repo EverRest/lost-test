@@ -1160,6 +1160,7 @@ var App = (function () {
                         zoom: 8
                     });
                     addMarkers(res.result);
+                    if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
                 },
                 dataType: 'json',
                 error: function (XHR, status, response) {
