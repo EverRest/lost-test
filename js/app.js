@@ -269,7 +269,6 @@ var App = (function () {
         $.ajax({
             url: URL + 'index.php/app/getData',
             success: function (res) {
-                console.log(res);
                 addMarkers(res);
             },
             dataType: 'json',
@@ -368,13 +367,16 @@ var App = (function () {
                 $('#additional').val('');
 
                 lostModal.find('.modal-header').append(mess);
-                lostModal.find('.modal-body').slideDown('fast');
+                lostModal.find('.modal-body').slideToggle('fast');
                 // hideMarkers(map, $this.markers);
 
                 setTimeout(function () {
                     addMarkerEvent();
                     $('.form-msg').remove();
-                    lostModal.find('.modal-body').slideUp('fast');
+                    lostModal.find('.modal-body').slideToggle('fast');
+                    $('.dz-image-preview').remove();
+                    $('.dz-default').show('fast');
+                    $('#type').val('default');
 
                     lostModal.find('.close').click();
 
@@ -432,6 +434,7 @@ var App = (function () {
         var infowindow = new google.maps.InfoWindow();
 
         google.maps.event.addListener(infowindow, 'domready', function() {
+
 
             // Reference to the DIV which receives the contents of the infowindow using jQuery
             var iwOuter = $('.gm-style-iw');
@@ -497,7 +500,7 @@ var App = (function () {
                             '<h3>' + lost.type.toUpperCase()  + '</h3>'+
                             '</div><div class="iw-main ' + lost.type + '-bg">'+
                             '<img class="lost-img" src="' + URL + 'uploads/animals/' + lost.photo +'" alt="' + lost.name +'">' +
-                            '<p><span>Address: </span><span>( ' + lost.lat + ', ' + lost.lng  + ' )</span></p>' +
+                            '<p><span>Address: </span><span>( ' + marker.lat + ', ' + marker.lng  + ' )</span></p>' +
                             '<div class="iw-text"><p><span>Name: </span><stromg>' + lost.name.toUpperCase()  + '</stromg></p>' +
                             '<p><span>Sort: </span><span>' + lost.additional  + '</span></p>' +
                             '</div>'+
@@ -1248,7 +1251,8 @@ var App = (function () {
           var marker = new google.maps.Marker({
               position: Coordinate,
               map: map,
-              icon: 'img/marker.png'
+              icon: 'img/marker.png',
+              draggable: true
           });
 
 
