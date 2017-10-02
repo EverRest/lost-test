@@ -42,6 +42,16 @@ class Animal_model extends CI_Model {
         return false;
     }
 
+    public function searchByPoly($poly_arr)
+    {
+        echo '<pre>';print_r($poly_arr);exit;
+    }
+
+    /**
+     * @param array $coords
+     * @param int $radius
+     * @return mixed
+     */
     public function searchByRadius($coords = array(), $radius = 0)
     {
         $animals = $this->db->query("SELECT *, 

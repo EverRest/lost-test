@@ -131,6 +131,9 @@ class App extends CI_Controller
         echo json_encode($res);
 	}
 
+    /**
+     * return json
+     */
     public function searchByText()
     {
         $response = array(
@@ -161,6 +164,9 @@ class App extends CI_Controller
         echo json_encode($response);
     }
 
+    /**
+     * return json
+     */
     public function searchByRadius()
     {
         $response = array(
@@ -194,5 +200,36 @@ class App extends CI_Controller
 
         echo json_encode($response);
 
+    }
+
+    /**
+     * return json
+     */
+    public function searchByPoly()
+    {
+        $response = array(
+            'success' => true,
+            'errors' => 0,
+            'messages' => false,
+            'result' => false
+        );
+
+        if(empty($_POST['poly_arr'])) {
+            $response['success'] = false;
+            $response['errors']++;
+        }
+
+        if ($response['success'] && $response['errors'] == 0)
+        {
+            // XSS cleaning the $_POST
+
+            $this->load->helper("security");
+            $poly_arr = $this->security->xss_clean($_POST['poly_arr']);
+
+            $result = $this->animal->searchByPoly($poly_arr);
+            $response['result'] = $result;
+        }
+
+        echo json_encode($response);
     }
 }

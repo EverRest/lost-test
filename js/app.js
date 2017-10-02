@@ -521,6 +521,8 @@ var App = (function () {
      */
     App.prototype.searchByPolygon =   function () {
         $(document).on('click', '#polygon-btn', function () {
+            poly_array = [];
+
             poly = new google.maps.Polyline({
                 strokeColor: '#00DB00',
                 strokeOpacity: 1.0,
@@ -545,19 +547,57 @@ var App = (function () {
      */
     function addLatLng(event) {
         var path = poly.getPath();
-        if(path.length==4){
+        if(path.length==6){
             var polygonOptions={path:path,strokeColor:"#00DB00",fillColor:"#DBDB08"};
             var polygon=new google.maps.Polygon(polygonOptions);
             polygon.setMap(map);
+            filterByPolygon(poly_array);
         }
 
         path.push(event.latLng);
+        poly_array.push({'lat': event.latLng.lat(), 'lng':  event.latLng.lng()});
+
         var marker = new google.maps.Marker({
             position: event.latLng,
             title: '#' + path.getLength(),
             map: map,
             icon: URL + 'img/polygon-marker.png'
         });
+    }
+
+    function filterByPolygon( arr ) {
+
+        if (arr.length) {
+            $.ajax({
+                url: URL + 'index.php/app/searchByPoly',
+                type: 'post',
+                data: {
+                    'poly_arr': poly_array,
+                },
+                success: function (res) {
+                    console.log(res);
+                    // if (res.success) {
+                    //     hideMarkers(map, $this.markers);
+                    //     addMarkers(res.result);
+                    // } else {
+                    //     alert('Error: Wrong Input!');
+                    // }
+                    // render map
+                    // map = new google.maps.Map(document.getElementById('map'), {
+                    //     center: {lat: -34.397, lng: 150.644},
+                    //     styles: mapStyles,
+                    //     zoom: 8
+                    // });
+                },
+                dataType: 'json',
+                error: function (XHR, status, response) {
+                    console.log(XHR);
+                    console.log(status);
+                }
+            });
+        } else {
+            alert('Wrong input');
+        }
     }
 
     /**
@@ -615,6 +655,7 @@ var App = (function () {
                 }
             });
         });
+
         /**
          * filter animal by radius
          * @param radius
@@ -655,7 +696,6 @@ var App = (function () {
             } else {
                 alert('Wrong input');
             }
-
         }
 
         /**
@@ -925,7 +965,7 @@ var App = (function () {
             $('.loader').hide('fast');
             $('.map').show('fast');
         }, 1500);
-    };
+    }
 
     /**
      * ajax search by text
