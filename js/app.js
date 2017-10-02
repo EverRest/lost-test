@@ -369,7 +369,7 @@ var App = (function () {
 
                 lostModal.find('.modal-header').append(mess);
                 lostModal.find('.modal-body').slideDown('fast');
-                hideMarkers(map, $this.markers);
+                // hideMarkers(map, $this.markers);
 
                 setTimeout(function () {
                     addMarkerEvent();
@@ -478,6 +478,7 @@ var App = (function () {
 
         // add a marker to the map.
         function addMarker(location, map) {
+
             marker = new google.maps.Marker({
                 position: location,
                 map: map,
