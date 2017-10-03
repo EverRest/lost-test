@@ -15,6 +15,10 @@ class Animal_model extends CI_Model {
     public function __construct()
     {
         parent::__construct();
+        $this->load->model('Type_model', 'type');
+        $this->load->model('Dog_model', 'dog');
+        $this->load->model('Cat_model', 'cat');
+        $this->load->model('Parrot_model', 'parrot');
     }
 
     /**
@@ -114,10 +118,7 @@ class Animal_model extends CI_Model {
      */
     public function searchByRadius($coords = array(), $radius = 0)
     {
-        
-//        echo '<pre>';print_r($coords);
-//        echo '<br>';print_r($radius);
-//        exit;
+
         $animals = $this->db->query("SELECT *, 
                             ( 3959 * acos( cos( radians( " . $this->db->escape_str($coords['lat']) . " ) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(" . $this->db->escape_str($coords['lng']) . ") ) + sin( radians(" . $this->db->escape_str($coords['lat']) . ") ) * sin( radians( lat ) ) ) ) AS distance,
                              " . $this->db->escape_str($radius) . " AS radius 
@@ -187,98 +188,26 @@ class Animal_model extends CI_Model {
         return $data;
     }
 
-
-    /**
-     * get additional info to animal
-     * @param bool $type_id
-     * @return string
-     */
-    private function getAdditional ($type_id = false)
-    {
-        if ($type_id === 1) return 'sort';
-        if ($type_id === 2) return 'color';
-        if ($type_id === 3) return 'talk';
-        return $type_id;
-    }
-
-    /**
-     * @param int $type_id
-     * @return string
-     */
-    private function getType ($type_id = 0)
-    {
-        if ($type_id == 1) return 'dog';
-        if ($type_id == 2) return 'cat';
-        if ($type_id == 3) return 'parrot';
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getData()
-    {
-
-        $query = $this->db->get('animals');
-        $animals = $query->result();
-
-        foreach ($animals as $key => $row) {
-            if ($row->id > 0) {
-
-                $additional = $this->getAdditional($row->type_id);
-                $type = $this->getType($row->type_id);
-
-
-                $row->additional = $this->db->query("SELECT t2.info 
-                                      FROM animals_" . $type . "s t1
-                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
-                                      WHERE t1.animal_id=" . $row->id ."
-                                      LIMIT 1
-                                      ")->result();
-
-
-                $this->db->select('name');
-                $this->db->from('types');
-                $this->db->where('id', $row->type_id);
-                $this->db->limit(1);
-                $query = $this->db->get();
-
-                $row->type = $query->result()[0];
-
-            }
-        }
-        return $animals;
-
-    }
-
     /**
      * @param string $str
      * @return mixed
      */
     public function searchByText( $str = '')
     {
-        $animals = $this->db->query("SELECT * FROM animals WHERE name LIKE '%$str%'")->result();
 
-        foreach ($animals as $key => $row) {
-            if ($row->id > 0) {
-                $additional = $this->getAdditional($row->type_id);
-                $type = $this->getType($row->type_id);
+        $dogs = $this->dog->searchByText($str);
+        $cats = $this->cat->searchByText($str);
+        $parrots = $this->parrot->searchByText($str);
 
-                $row->additional = $this->db->query("SELECT t2.info 
-                                      FROM animals_" . $type . "s t1
-                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
-                                      WHERE t1.animal_id=" . $row->id ."
-                                      LIMIT 1
-                                      ")->result();
+        return array_merge($dogs,$cats,$parrots);
+    }
 
-                $this->db->select('name');
-                $this->db->from('types');
-                $this->db->where('id', $row->type_id);
-                $this->db->limit(1);
-                $query = $this->db->get();
-                $row->type = $query->result()[0];
+    public function getAll()
+    {
+        $dogs = $this->dog->all();
+        $cats = $this->cat->all();
+        $parrots = $this->parrot->all();
 
-            }
-        }
-                return $animals;
+        return array_merge($dogs,$cats,$parrots);
     }
 }

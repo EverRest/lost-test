@@ -1338,47 +1338,47 @@ var App = (function () {
         // add InfoWindow
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
-              if (!markers[i].additional) console.log('empty additional info');
-              markers[i].additional = markers[i].additional[0];
+              if (!markers[i].info) console.log('empty additional info');
+              // markers[i].additional = markers[i].additional;
 
               var str = '';
 
-              switch (markers[i].type.name) {
+              switch (markers[i].type) {
 
                   case 'dog':
                       str = '<div class="iw-title">'+
-                            '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
-                            '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                            '<h3>' + markers[i].type.toUpperCase()  + '</h3>'+
+                            '</div><div class="iw-main ' + markers[i].type + '-bg">'+
                             '<div class="iw-text">' +
                             '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
                             '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p>' +
                             '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                            '<p><span>Sort: </span><span>' + markers[i].additional.info + '</span></p>' +
+                            '<p><span>Sort: </span><span>' + markers[i].info + '</span></p>' +
                             '</div>'+
                             '</div>';
                       break;
 
                   case 'cat':
                       str = '<div class="iw-title">'+
-                          '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
-                          '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                          '<h3>' + markers[i].type.toUpperCase()  + '</h3>'+
+                          '</div><div class="iw-main ' + markers[i].type + '-bg">'+
                           '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
                           '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
                           '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                          '<p><span>Color: </span><span>' + markers[i].additional.info  + '</span></p>' +
+                          '<p><span>Color: </span><span>' + markers[i].info  + '</span></p>' +
                           '</div>'+
                           '</div>';
                       break;
 
                   case 'parrot':
                       str = '<div class="iw-title">'+
-                          '<h3>' + markers[i].type.name.toUpperCase()  + '</h3>'+
-                          '</div><div class="iw-main ' + markers[i].type.name + '-bg">'+
+                          '<h3>' + markers[i].type.toUpperCase()  + '</h3>'+
+                          '</div><div class="iw-main ' + markers[i].type + '-bg">'+
                           '<div class="iw-text">' +
                           '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
                           '<img class="lost-img block-center" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
                           '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                          '<p><span>Talk: </span><span>' + markers[i].additional.info  + '</span></p>' +
+                          '<p><span>Talk: </span><span>' + markers[i].info  + '</span></p>' +
                           '</div>'+
                           '</div>';
                       break;

@@ -12,9 +12,6 @@ class App extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Animal_model', 'animal');
-        $this->load->model('Dog_model', 'dog');
-        $this->load->model('Cat_model', 'cat');
-        $this->load->model('Parrot_model', 'parrot');
     }
     
 	/**
@@ -127,8 +124,8 @@ class App extends CI_Controller
      */
     public function getData()
     {
-        $res = $this->animal->getData();
-        echo json_encode($res);
+        $animals = $this->animal->getAll();
+        echo json_encode($animals);
 	}
 
     /**
