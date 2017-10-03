@@ -214,7 +214,8 @@ class App extends CI_Controller
             'result' => false
         );
 
-        if(empty($_POST['poly_arr'])) {
+
+        if(empty($_POST['ne']['lng']) || empty($_POST['sw']['lng']) || empty($_POST['ne']['lat']) || empty($_POST['sw']['lat'])) {
             $response['success'] = false;
             $response['errors']++;
         }
@@ -224,9 +225,10 @@ class App extends CI_Controller
             // XSS cleaning the $_POST
 
             $this->load->helper("security");
-            $poly_arr = $this->security->xss_clean($_POST['poly_arr']);
+            $ne = $this->security->xss_clean($_POST['ne']);
+            $sw = $this->security->xss_clean($_POST['sw']);
 
-            $result = $this->animal->searchByPoly($poly_arr);
+            $result = $this->animal->searchByPoly(array('ne'=>$ne, 'sw'=>$sw));
             $response['result'] = $result;
         }
 

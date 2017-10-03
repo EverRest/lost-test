@@ -2,6 +2,7 @@ var App = (function () {
 
     var app,
         $this = this,
+        rectangle,
         map = {},
         lost = {},
         marker,
@@ -525,19 +526,37 @@ var App = (function () {
      */
     App.prototype.searchByPolygon =   function () {
         $(document).on('click', '#polygon-btn', function () {
-            poly_array = [];
+            var poly_array = [];
 
-            poly = new google.maps.Polyline({
-                strokeColor: '#00DB00',
-                strokeOpacity: 1.0,
-                strokeWeight: 3,
-                fillColor: '#00DB00',
-                fillOpacity: 0.05
-            });
+            // poly = new google.maps.Polyline({
+            //     strokeColor: '#00DB00',
+            //     strokeOpacity: 1.0,
+            //     strokeWeight: 3,
+            //     fillColor: '#00DB00',
+            //     fillOpacity: 0.05
+            // });
 
             hideMarkers(map, $this.markers);
-            poly.setMap(map);
-            map.addListener('click', addLatLng);
+            map.addListener('click', function (e) {
+
+                var latLng = e.latLng,
+                    bounds = new google.maps.LatLngBounds(
+                        new google.maps.LatLng (latLng.lat(), latLng.lng()),
+                        new google.maps.LatLng (latLng.lat() - 1, latLng.lng() + 2)
+                    );
+
+                // Define a rectangle and set its  editable property to true.
+                rectangle = new google.maps.Rectangle({
+                    bounds: bounds,
+                    editable: true,
+                    map: map
+                });
+
+                // Add an event listener on the rectangle.
+                rectangle.addListener('bounds_changed', showNewRect);
+                // google.maps.event.clearListeners(map, 'click');
+
+            });
 
             $(document).on('click', '#polygon-btn', function () {
                 window.location.reload();
@@ -545,47 +564,99 @@ var App = (function () {
         });
     };
 
+    function showNewRect(event) {
+        var ne = rectangle.getBounds().getNorthEast(),
+            sw = rectangle.getBounds().getSouthWest(),
+            data = [];
+
+        data['lat'] = [ne.lat(),sw.lat()];
+        data['lng'] = [ne.lng(),sw.lng()];
+
+
+        // setTimeout(function () {
+            var ne = {
+                    'lat': ne.lat(),
+                    'lng': ne.lng()
+                    },
+                sw = {
+                    'lat': sw.lat(),
+                    'lng': sw.lng()
+                    };
+            filterByPolygon(ne, sw);
+        // }, 5000);
+    }
+
+    // function addPoly() {
+    //     var bounds = {
+    //         north: 44.599,
+    //         south: 44.490,
+    //         east: -78.443,
+    //         west: -78.649
+    //     };
+    //
+    //     console.log(bounds);
+    //
+    //     // Define a rectangle and set its editable property to true.
+    //     var rectangle = new google.maps.Rectangle({
+    //         bounds: bounds,
+    //         editable: true
+    //     });
+    // }
+    
     /**
      * new point to polygon
      * @param event
      */
-    function addLatLng(event) {
-        var path = poly.getPath();
-        if(path.length==6){
-            var polygonOptions={path:path,strokeColor:"#00DB00",fillColor:"#DBDB08"};
-            var polygon=new google.maps.Polygon(polygonOptions);
-            polygon.setMap(map);
-            filterByPolygon(poly_array);
-        }
+    // function addLatLng(event) {
+    //     var path = poly.getPath();
+    //
+    //     if(path.length == 4){
+    //         var polygonOptions = {path:path,strokeColor:"#00DB00",fillColor:"#DBDB08"};
+    //         var polygon = new google.maps.Polygon(polygonOptions);
+    //         polygon.setMap(map);
+    //         filterByPolygon(poly_array);
+    //     }
+    //
+    //     path.push(event.latLng);
+    //     poly_array.push({'lat': event.latLng.lat(), 'lng':  event.latLng.lng()});
+    //
+    //     var marker = new google.maps.Marker({
+    //         position: event.latLng,
+    //         title: '#' + path.getLength(),
+    //         map: map,
+    //         icon: URL + 'img/polygon-marker.png'
+    //     });
+    // }
 
-        path.push(event.latLng);
-        poly_array.push({'lat': event.latLng.lat(), 'lng':  event.latLng.lng()});
+    /**
+     * @param data
+     */
+    // function filterByPolygon( bounds ) {
+    function filterByPolygon( ne, sw ) {
 
-        var marker = new google.maps.Marker({
-            position: event.latLng,
-            title: '#' + path.getLength(),
-            map: map,
-            icon: URL + 'img/polygon-marker.png'
-        });
-    }
-
-    function filterByPolygon( arr ) {
-
-        if (arr.length) {
+        // console.log(data);
+        // if (bounds.length) {
             $.ajax({
                 url: URL + 'index.php/app/searchByPoly',
                 type: 'post',
                 data: {
-                    'poly_arr': poly_array,
+                    'ne': ne,
+                    'sw': sw
                 },
                 success: function (res) {
                     console.log(res);
-                    // if (res.success) {
-                    //     hideMarkers(map, $this.markers);
-                    //     addMarkers(res.result);
-                    // } else {
-                    //     alert('Error: Wrong Input!');
-                    // }
+                    if (res.success) {
+                        // hideMarkers(map, $this.markers);
+                        // render map
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: {lat: -34.397, lng: 150.644},
+                            styles: mapStyles,
+                            zoom: 8
+                        });
+                        addMarkers(res.result);
+                    } else {
+                        alert('Error: Wrong Input!');
+                    }
                     // render map
                     // map = new google.maps.Map(document.getElementById('map'), {
                     //     center: {lat: -34.397, lng: 150.644},
@@ -599,9 +670,9 @@ var App = (function () {
                     console.log(status);
                 }
             });
-        } else {
-            alert('Wrong input');
-        }
+        // } else {
+        //     alert('Wrong input');
+        // }
     }
 
     /**
