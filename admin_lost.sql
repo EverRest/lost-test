@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Час створення: Жов 01 2017 р., 12:45
+-- Час створення: Жов 04 2017 р., 18:38
 -- Версія сервера: 5.6.34-log
 -- Версія PHP: 7.0.14
 
@@ -40,28 +40,30 @@ CREATE TABLE `animals` (
 --
 
 INSERT INTO `animals` (`id`, `name`, `type_id`, `photo`, `lng`, `lat`) VALUES
-(12, 'fdsfdsfsda', 1, 'uploads/animals/IMG_5370.JPG', '149.161376953125', '-34.96699890670366'),
-(13, 'vcxvxcvxc', 1, 'uploads/animals/IMG_5370.JPG', '149.732666015625', '-34.78222760653012'),
-(14, 'Lucky', 1, 'uploads/animals/IMG_5370.JPG', '147.6507568359375', '-34.28445325435288'),
-(15, 'Zooolooose', 3, 'uploads/animals/IMG_5370.JPG', '147.1893310546875', '-35.115415314253596'),
-(16, 'Berry', 2, 'uploads/animals/IMG_5370.JPG', '148.677978515625', '-33.61461929233377'),
-(17, 'ghjgkk', 1, 'uploads/animals/IMG_5370.JPG', '148.2330322265625', '-35.00750284295289'),
-(18, 'POlly', 2, 'uploads/animals/IMG_5370.JPG', '148.018798828125', '-34.83634999076384'),
-(19, ',.m nbvnvm,', 3, 'uploads/animals/IMG_5370.JPG', '149.1229248046875', '-34.19362958613085'),
-(20, 'Pedrik', 2, 'uploads/animals/IMG_5370.JPG', '151.116943359375', '-33.86129311351552'),
-(21, 'Booby', 2, 'uploads/animals/IMG_0227.JPG', '148.634033203125', '-32.249974455863295'),
-(22, 'Eddy', 3, 'uploads/animals/IMG_7731.JPG', '148.2989501953125', '-34.307143856288036'),
-(23, 'Pussycat', 2, 'uploads/animals/IMG_5370.JPG', '153.5723876953125', '-34.583475055991755'),
-(24, 'Kerry', 3, 'uploads/animals/IMG_5370.JPG', '152.1221923828125', '-35.44277092585765'),
-(25, 'Valera', 1, 'uploads/animals/IMG_5370.JPG', '152.4737548828125', '-33.6008944080788'),
-(26, 'Byyy', 2, 'uploads/animals/IMG_5370.JPG', '151.7706298828125', '-34.651285198954135'),
-(27, 'Petty', 2, 'uploads/animals/IMG_5370.JPG', '151.6937255859375', '-34.49750272138161'),
-(28, 'ggi', 3, 'uploads/animals/IMG_5370.JPG', '145.8984375', '-32.8795871730663'),
-(29, 'buulby', 2, 'uploads/animals/IMG_5370.JPG', '148.392333984375', '-36.38591277287651'),
-(30, 'Petty', 2, 'uploads/animals/IMG_5370.JPG', '142.305908203125', '-32.41242905441613'),
-(31, 'Duma', 2, 'uploads/animals/IMG_5370.JPG', '144.9700927734375', '-37.84015683604134'),
-(32, 'Nana', 1, 'uploads/animals/IMG_5370.JPG', '148.0902099609375', '-40.02340800226771'),
-(33, 'Poppy', 1, 'uploads/animals/IMG_5370.JPG', '121.9482421875', '-26.470573022375085');
+(38, 'Derek', 1, 'uploads/animals/IMG_5370.JPG', '146.986083984375', '-34.16181816123038'),
+(39, 'Lucky', 3, 'uploads/animals/IMG_5370.JPG', '150.908203125', '-33.87953701355922'),
+(40, 'Jobby', 1, 'uploads/animals/IMG_5370.JPG', '149.150390625', '-35.357696204467516'),
+(41, 'Creator', 2, 'uploads/animals/IMG_5370.JPG', '-118.4915828704834', '34.03222983079913'),
+(42, 'Caret', 2, 'uploads/animals/IMG_5370.JPG', '154.8907470703125', '-34.50655662164559'),
+(43, 'Montana', 1, 'uploads/animals/IMG_5370.JPG', '173.759765625', '-42.09822241118973'),
+(44, 'Bobby', 2, 'uploads/animals/IMG_5370.JPG', '153.0450439453125', '-27.46928747369202'),
+(45, 'Nenno', 2, 'uploads/animals/IMG_5370.JPG', '144.9755859375', '-37.82280243352756'),
+(46, 'Berry', 2, 'uploads/animals/IMG_5370.JPG', '126.705322265625', '-25.98273700762736'),
+(47, 'Poppora', 2, 'uploads/animals/IMG_5370.JPG', '137.900390625', '-4.631179340411012'),
+(48, 'Kool', 1, 'uploads/animals/IMG_5370.JPG', '156.15966796875', '-32.21744857303103'),
+(49, 'Tuky', 3, 'uploads/animals/IMG_5370.JPG', '148.2110595703125', '-37.47049847079871'),
+(50, 'bbbbb', 2, 'uploads/animals/IMG_5370.JPG', '80.33203125', '6.839169626342807'),
+(51, 'Puppy', 1, 'uploads/animals/IMG_5370.JPG', '32.51953125', '-1.9332268264771106'),
+(52, 'Newbie', 1, 'uploads/animals/IMG_5370.JPG', '130.84716796875', '-11.73830237143684'),
+(55, 'Keno', 2, 'uploads/animals/IMG_5370.JPG', '148.0682373046875', '-34.99850370014628'),
+(56, 'Kendra', 2, 'uploads/animals/IMG_5370.JPG', '150.5181884765625', '-35.16033672813034'),
+(57, 'Gogyna', 2, 'uploads/animals/IMG_5370.JPG', '143.349609375', '-15.284185114076422'),
+(58, 'Olll', 1, 'uploads/animals/IMG_5370.JPG', '146.458740234375', '-34.49297540250153'),
+(59, 'Bulby', 3, 'uploads/animals/IMG_5370.JPG', '135.17578125', '-30.088107753367257'),
+(60, 'Nully', 3, 'uploads/animals/IMG_5370.JPG', '143.6297607421875', '-34.20271636159618'),
+(61, 'NifNif', 1, 'uploads/animals/IMG_5370.JPG', '112.1044921875', '0.8349313860427184'),
+(62, 'NafNam', 2, 'uploads/animals/IMG_5370.JPG', '114.7412109375', '2.3723687086440504'),
+(63, 'Nufnuf', 3, 'uploads/animals/IMG_5370.JPG', '115.1806640625', '-2.3723687086440504');
 
 -- --------------------------------------------------------
 
@@ -79,16 +81,16 @@ CREATE TABLE `animals_cats` (
 --
 
 INSERT INTO `animals_cats` (`animal_id`, `id`) VALUES
-(16, 1),
-(18, 2),
-(20, 3),
-(21, 4),
-(23, 5),
-(26, 6),
-(27, 7),
-(29, 8),
-(30, 9),
-(31, 10);
+(41, 13),
+(42, 14),
+(44, 15),
+(45, 16),
+(46, 17),
+(47, 18),
+(50, 19),
+(56, 20),
+(57, 21),
+(62, 22);
 
 -- --------------------------------------------------------
 
@@ -106,13 +108,14 @@ CREATE TABLE `animals_dogs` (
 --
 
 INSERT INTO `animals_dogs` (`animal_id`, `id`) VALUES
-(12, 2),
-(13, 3),
-(14, 4),
-(17, 5),
-(25, 6),
-(32, 7),
-(33, 8);
+(38, 9),
+(40, 10),
+(43, 11),
+(48, 12),
+(51, 13),
+(52, 14),
+(58, 15),
+(61, 16);
 
 -- --------------------------------------------------------
 
@@ -130,11 +133,11 @@ CREATE TABLE `animals_parrots` (
 --
 
 INSERT INTO `animals_parrots` (`animal_id`, `id`) VALUES
-(15, 1),
-(19, 2),
-(22, 3),
-(24, 4),
-(28, 5);
+(39, 7),
+(49, 8),
+(59, 9),
+(60, 10),
+(63, 11);
 
 -- --------------------------------------------------------
 
@@ -152,16 +155,16 @@ CREATE TABLE `cats` (
 --
 
 INSERT INTO `cats` (`id`, `info`) VALUES
-(1, 'rudy'),
-(2, 'nice'),
-(3, 'blue'),
-(4, 'blue'),
-(5, 'terracot'),
-(6, 'silver'),
-(7, 'candy'),
-(8, 'white'),
-(9, 'catty'),
-(10, 'lovely');
+(13, 'blue'),
+(14, 'red'),
+(15, 'orange'),
+(16, 'Lol'),
+(17, 'violet'),
+(18, 'brown'),
+(19, 'silver'),
+(20, 'brown'),
+(21, 'silver'),
+(22, 'gold');
 
 -- --------------------------------------------------------
 
@@ -179,13 +182,14 @@ CREATE TABLE `dogs` (
 --
 
 INSERT INTO `dogs` (`id`, `info`) VALUES
-(2, 'sdafdsfsadf'),
-(3, 'dcxzcxzcxzc'),
-(4, 'doberman'),
-(5, 'm,nmnbnm.'),
-(6, 'hasky'),
-(7, 'Huuuuu'),
-(8, 'Catu');
+(9, 'wolf'),
+(10, 'huskey'),
+(11, 'terra'),
+(12, 'noooooon'),
+(13, 'green'),
+(14, 'labrador'),
+(15, 'akito'),
+(16, 'terrier');
 
 -- --------------------------------------------------------
 
@@ -203,11 +207,11 @@ CREATE TABLE `parrots` (
 --
 
 INSERT INTO `parrots` (`id`, `info`) VALUES
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 1),
-(5, 1);
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1);
 
 -- --------------------------------------------------------
 
@@ -293,22 +297,22 @@ ALTER TABLE `types`
 -- AUTO_INCREMENT для таблиці `animals`
 --
 ALTER TABLE `animals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 --
 -- AUTO_INCREMENT для таблиці `cats`
 --
 ALTER TABLE `cats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT для таблиці `dogs`
 --
 ALTER TABLE `dogs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT для таблиці `parrots`
 --
 ALTER TABLE `parrots`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT для таблиці `types`
 --
