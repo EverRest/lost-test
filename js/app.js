@@ -528,14 +528,6 @@ var App = (function () {
         $(document).on('click', '#polygon-btn', function () {
             var poly_array = [];
 
-            // poly = new google.maps.Polyline({
-            //     strokeColor: '#00DB00',
-            //     strokeOpacity: 1.0,
-            //     strokeWeight: 3,
-            //     fillColor: '#00DB00',
-            //     fillOpacity: 0.05
-            // });
-
             hideMarkers(map, $this.markers);
             map.addListener('click', function (e) {
 
@@ -554,12 +546,11 @@ var App = (function () {
 
                 // Add an event listener on the rectangle.
                 rectangle.addListener('bounds_changed', showNewRect);
-                // google.maps.event.clearListeners(map, 'click');
 
             });
 
             $(document).on('click', '#polygon-btn', function () {
-                window.location.reload();
+                bounds.setMap(null);
             });
         });
     };
@@ -698,7 +689,9 @@ var App = (function () {
             google.maps.event.addListener(map, 'click', function(event) {
 
                 $(document).on('click', '#radius-btn', function () {
-                    window.location.reload();
+                    marker.setMap(null);
+                    circle.setMap(null);
+
                 });
 
                 if (setCenter) {
@@ -1059,6 +1052,7 @@ var App = (function () {
                    'search': search
                 },
                 success: function (res) {
+                    console.log(res);
                     // render map
                     map = new google.maps.Map(document.getElementById('map'), {
                         center: {lat: -34.397, lng: 150.644},

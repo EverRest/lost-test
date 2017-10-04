@@ -14,18 +14,33 @@ class Type_model extends CI_Model {
     }
 
     /**
-     * @param integer $id
-     * @return mixed
+     * @param int $id
+     * @return string
      */
-    public function getById( $id = 0 )
+    public function getTypeById( $id = 0 )
     {
-        return $this->db->query("SELECT name AS type  
+        $res = $this->db->query("SELECT name AS type  
                                   FROM types
                                   WHERE id= " . $this->db->escape_str($id) . "
                                   LIMIT 1
-                                  ")->result();
+                                  ")->row();
+        return $res->type;
     }
 
+    /**
+     * @param string $type
+     * @return int
+     */
+    public function geIdByType( $type = '' )
+    {
+        $res = $this->db->query("SELECT id AS type_id  
+                                  FROM types
+                                  WHERE name= '" . $this->db->escape_str($type) . "'
+                                  LIMIT 1
+                                  ")->row();
+
+        return $res->type_id;
+    }
     /**
      * @return mixed
      */

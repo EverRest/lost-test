@@ -46,111 +46,70 @@ class Animal_model extends CI_Model {
         return false;
     }
 
-
-    /**
-     * @param array $poly_arr
-     * @return mixed
-     */
-    public function searchByPoly($poly = array())
-    {
-
-        $lat = array();
-        $lng = array();
-
-        if($poly['ne']['lat'] > $poly['sw']['lat'])
-        {
-            $lat['min'] = $poly['sw']['lat'];
-            $lat['max'] = $poly['ne']['lat'];
-        } else {
-            $lat['max'] = $poly['sw']['lat'];
-            $lat['min'] = $poly['ne']['lat'];
-        }
-
-
-        if($poly['ne']['lng'] > $poly['sw']['lng'])
-        {
-            $lng['min'] = $poly['sw']['lng'];
-            $lng['max'] = $poly['ne']['lng'];
-        } else {
-            $lng['max'] = $poly['sw']['lng'];
-            $lng['min'] = $poly['ne']['lng'];
-        }
-
-
-        $animals = $this->db->query("SELECT * " .
-                                    "FROM animals WHERE " .
-                                    "(lat BETWEEN " . $this->db->escape_str($lat['min']) . " AND " . $this->db->escape_str($lat['max']) . ") AND " .
-                                    "(lng BETWEEN " . $this->db->escape_str($lng['min']) . " AND " . $this->db->escape_str($lng['max']) . ") ORDER BY id ASC")->result();
-
-
-        foreach ($animals as $key => $row) {
-            if ($row->id > 0) {
-
-                $additional = $this->getAdditional($row->type_id);
-                $type = $this->getType($row->type_id);
-
-
-                $row->additional = $this->db->query("SELECT t2.info 
-                                      FROM animals_" . $type . "s t1
-                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
-                                      WHERE t1.animal_id=" . $row->id ."
-                                      LIMIT 1
-                                      ")->result();
-
-
-                $this->db->select('name');
-                $this->db->from('types');
-                $this->db->where('id', $row->type_id);
-                $this->db->limit(1);
-                $query = $this->db->get();
-
-                $row->type = $query->result();
-
-            }
-        }
-        return $animals;
-    }
-
-    /**
-     * @param array $coords
-     * @param int $radius
-     * @return mixed
-     */
-    public function searchByRadius($coords = array(), $radius = 0)
-    {
-
-        $animals = $this->db->query("SELECT *, 
-                            ( 3959 * acos( cos( radians( " . $this->db->escape_str($coords['lat']) . " ) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(" . $this->db->escape_str($coords['lng']) . ") ) + sin( radians(" . $this->db->escape_str($coords['lat']) . ") ) * sin( radians( lat ) ) ) ) AS distance,
-                             " . $this->db->escape_str($radius) . " AS radius 
-                            FROM animals HAVING distance < " . $this->db->escape_str($radius) . " ORDER BY distance LIMIT 0 , 20")->result();
-
-
-        foreach ($animals as $key => $row) {
-            if ($row->id > 0) {
-
-                $additional = $this->getAdditional($row->type_id);
-                $type = $this->getType($row->type_id);
-
-                $row->additional = $this->db->query("SELECT t2.info 
-                                      FROM animals_" . $type . "s t1
-                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
-                                      WHERE t1.animal_id=" . $row->id ."
-                                      LIMIT 1
-                                      ")->result();
-
-                $this->db->select('name');
-                $this->db->from('types');
-                $this->db->where('id', $row->type_id);
-                $this->db->limit(1);
-                $query = $this->db->get();
-
-                $row->type = $query->result()[0];
-
-            }
-        }
-
-        return $animals;
-    }
+//
+//    /**
+//     * @param array $poly_arr
+//     * @return mixed
+//     */
+//    public function searchByPoly($poly = array())
+//    {
+//
+//        $lat = array();
+//        $lng = array();
+//
+//        if($poly['ne']['lat'] > $poly['sw']['lat'])
+//        {
+//            $lat['min'] = $poly['sw']['lat'];
+//            $lat['max'] = $poly['ne']['lat'];
+//        } else {
+//            $lat['max'] = $poly['sw']['lat'];
+//            $lat['min'] = $poly['ne']['lat'];
+//        }
+//
+//
+//        if($poly['ne']['lng'] > $poly['sw']['lng'])
+//        {
+//            $lng['min'] = $poly['sw']['lng'];
+//            $lng['max'] = $poly['ne']['lng'];
+//        } else {
+//            $lng['max'] = $poly['sw']['lng'];
+//            $lng['min'] = $poly['ne']['lng'];
+//        }
+//
+//
+//        $animals = $this->db->query("SELECT * " .
+//                                    "FROM animals WHERE " .
+//                                    "(lat BETWEEN " . $this->db->escape_str($lat['min']) . " AND " . $this->db->escape_str($lat['max']) . ") AND " .
+//                                    "(lng BETWEEN " . $this->db->escape_str($lng['min']) . " AND " . $this->db->escape_str($lng['max']) . ") ORDER BY id ASC")->result();
+//
+//
+//        foreach ($animals as $key => $row) {
+//            if ($row->id > 0) {
+//
+//                $additional = $this->getAdditional($row->type_id);
+//                $type = $this->getType($row->type_id);
+//
+//
+//                $row->additional = $this->db->query("SELECT t2.info
+//                                      FROM animals_" . $type . "s t1
+//                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
+//                                      WHERE t1.animal_id=" . $row->id ."
+//                                      LIMIT 1
+//                                      ")->result();
+//
+//
+//                $this->db->select('name');
+//                $this->db->from('types');
+//                $this->db->where('id', $row->type_id);
+//                $this->db->limit(1);
+//                $query = $this->db->get();
+//
+//                $row->type = $query->result();
+//
+//            }
+//        }
+//        return $animals;
+//    }
 
     /**
      * store info about animal
@@ -163,24 +122,17 @@ class Animal_model extends CI_Model {
         $data = array();
 
         $data['name'] = $lost['name'];
-//        $data['type'] = $lost['type'];
-//        $data['type'] = $this->type->getById($lost['type_id']);
-
-        if ($lost['type'] === 'dog') {
-            $data['type_id'] = 1;
-        } elseif ($lost['type'] === 'cat') {
-            $data['type_id'] = 2;
-        } else {
-            $data['type_id'] = 3;
-        }
-
+        $data['type_id'] = $this->type->geIdByType($lost['type']);
 
         $data['photo'] = 'uploads/animals/' . $lost['photo'];
         $data['lat'] = $lost['lat'];
         $data['lng'] = $lost['lng'];
+
+        // save animal
         $this->db->insert('animals', $data);
         $data['id'] = $this->db->insert_id();
 
+        // save additional info
         if ($lost['type'] === 'dog') {
             $data['info_id'] = $this->dog->saveInfo($data['id'], $lost['additional']);
         } elseif ($lost['type'] === 'cat') {
@@ -188,13 +140,6 @@ class Animal_model extends CI_Model {
         } else {
             $data['info_id'] = $this->parrot->saveInfo($data['id'], $lost['additional']);
         }
-
-//        $data[$lost['type'] . '_id'] = $this->$lost['type']->saveInfo($data['id'], $lost['additional']);
-
-//        $this->db->insert($lost['type'] . 's', array('info' => $lost['additional']));
-//        $data[$lost['type'].'_id'] = $this->db->insert_id();
-
-//        $this->db->insert('animals_' . $lost['type'] . 's', array('animal_id' => $data['id'], 'id' => $data[$lost['type'].'_id']));
 
         return $data;
     }
@@ -213,6 +158,9 @@ class Animal_model extends CI_Model {
         return array_merge($dogs,$cats,$parrots);
     }
 
+    /**
+     * @return array
+     */
     public function getAll()
     {
         $dogs = $this->dog->all();
@@ -221,4 +169,34 @@ class Animal_model extends CI_Model {
 
         return array_merge($dogs,$cats,$parrots);
     }
+
+    /**
+     * @param array $coords
+     * @param int $radius
+     * @return mixed
+     */
+    public function searchByRadius($coords = array(), $radius = 0)
+    {
+        $dogs = $this->dog->searchByRadius( $coords, $radius);
+        $cats = $this->cat->searchByRadius( $coords, $radius);
+        $parrots = $this->parrot->searchByRadius( $coords, $radius);
+
+        return array_merge($dogs,$cats,$parrots);
+    }
+
+
+    /**
+     * @param array $poly
+     * @return array
+     */
+    public function searchByPoly($poly = array())
+    {
+        $dogs = $this->dog->searchByPoly($poly);
+        $cats = $this->cat->searchByPoly($poly);
+        $parrots = $this->parrot->searchByPoly($poly);
+
+
+        return array_merge($dogs, $cats, $parrots);
+    }
+
 }
