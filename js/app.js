@@ -686,12 +686,13 @@ var App = (function () {
                 clickable:false
             };
 
-            google.maps.event.addListener(map, 'click', function(event) {
+            var cirle_draw = google.maps.event.addListener(map, 'click', function(event) {
 
                 $(document).on('click', '#radius-btn', function () {
                     marker.setMap(null);
                     circle.setMap(null);
 
+                    google.maps.event.removeListener(cirle_draw);
                 });
 
                 if (setCenter) {

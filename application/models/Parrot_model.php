@@ -1,6 +1,9 @@
 <?php
+include APPPATH . 'traits/Animal.php';
 
 class Parrot_model extends CI_Model {
+
+    use Animal;
 
     private $id;
     private $tbl;
@@ -28,11 +31,7 @@ class Parrot_model extends CI_Model {
      */
     public function saveInfo($animal_id = 0, $additional = '')
     {
-        $this->db->insert('parrots', array('info' => $additional));
-        $id = $this->db->insert_id();
-        $this->db->insert('animals_parrots', array('animal_id' => $animal_id, 'id' => $id));
-
-        return $id;
+        return $this->saveAnimal($this->type, $animal_id, $additional);
     }
 
     /**
@@ -40,13 +39,7 @@ class Parrot_model extends CI_Model {
      */
     public function all()
     {
-        return $this->db->query("SELECT t3.*, t1.info, t4.name AS type  
-                                      FROM parrots AS t1
-                                      INNER JOIN animals_parrots AS t2 ON t1.id = t2.id
-                                      INNER JOIN animals AS t3 ON t2.animal_id=t3.id
-                                      INNER JOIN types AS t4 ON t4.id=t3.type_id
-                                      ORDER BY t3.id ASC
-                                      ")->result();
+        return $this->allTypicalAnimals($this->type);
     }
 
     /**
@@ -55,14 +48,7 @@ class Parrot_model extends CI_Model {
      */
     public function searchByText( $str = '')
     {
-        return $this->db->query("SELECT t3.*, t1.info, t4.name AS type  
-                                      FROM parrots AS t1
-                                      INNER JOIN animals_parrots AS t2 ON t1.id = t2.id
-                                      INNER JOIN animals AS t3 ON t2.animal_id=t3.id
-                                      INNER JOIN types AS t4 ON t4.id=t3.type_id
-                                      WHERE t3.name LIKE '%" . $this->db->escape_str($str) . "%'
-                                      ORDER BY t3.id ASC
-                                      ")->result();
+        return $this->searchText($this->type, $str);
     }
 
     /**
@@ -72,35 +58,7 @@ class Parrot_model extends CI_Model {
      */
     public function searchByRadius($coords = array(), $radius = 0)
     {
-        $animals = $this->db->query("SELECT t3.*, 
-                                ( 3959 * acos( cos( radians( " . $coords['lat']
-                                . " ) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians("
-                                . $coords['lng'] . ") ) + sin( radians(" . $coords['lat']
-                                . ") ) * sin( radians( lat ) ) ) ) AS distance,
-                                " . $radius . " AS radius 
-                                FROM animals AS t3
-                                WHERE t3.type_id=" . $this->type_id . "
-                                HAVING distance < " . $radius . "
-                                ORDER BY distance LIMIT 0 , 10
-                                ")->result();
-
-
-        foreach ($animals as $key => $row) {
-            if ($row->id > 0) {
-
-                $row->additional = $this->db->query("SELECT t2.info 
-                                      FROM animals_" . $this->type . "s t1
-                                      LEFT JOIN " . $this->type . "s t2 ON t1.id = t2.id
-                                      WHERE t1.animal_id=" . $row->id ."
-                                      LIMIT 1
-                                      ")->row();
-
-                $row->type = $this->type;
-
-            }
-        }
-
-        return $animals;
+        return $this->searchRadius($this->type, $coords, $radius);
     }
 
     /**
@@ -131,14 +89,6 @@ class Parrot_model extends CI_Model {
             $lng['min'] = $poly['ne']['lng'];
         }
 
-        return $this->db->query("SELECT t3.*, t1.info, t4.name AS type " .
-                                "FROM animals AS t3
-                                INNER JOIN animals_parrots AS t2 ON t3.id = t2.animal_id
-                                INNER JOIN parrots AS t1 ON t2.id=t1.id
-                                INNER JOIN types AS t4 ON t4.id=t3.type_id
-                                WHERE type_id=" . $this->type_id . " AND " .
-                                "(lat BETWEEN " . $this->db->escape_str($lat['min']) . " AND " . $this->db->escape_str($lat['max']) . ") AND " .
-                                "(lng BETWEEN " . $this->db->escape_str($lng['min']) . " AND " . $this->db->escape_str($lng['max']) . ") 
-                                ORDER BY id ASC")->result();
+        return $this->searchPoly($this->type, $poly);
     }
 }
