@@ -163,6 +163,8 @@ class Animal_model extends CI_Model {
         $data = array();
 
         $data['name'] = $lost['name'];
+//        $data['type'] = $lost['type'];
+//        $data['type'] = $this->type->getById($lost['type_id']);
 
         if ($lost['type'] === 'dog') {
             $data['type_id'] = 1;
@@ -172,18 +174,27 @@ class Animal_model extends CI_Model {
             $data['type_id'] = 3;
         }
 
+
         $data['photo'] = 'uploads/animals/' . $lost['photo'];
         $data['lat'] = $lost['lat'];
         $data['lng'] = $lost['lng'];
-
         $this->db->insert('animals', $data);
         $data['id'] = $this->db->insert_id();
 
+        if ($lost['type'] === 'dog') {
+            $data['info_id'] = $this->dog->saveInfo($data['id'], $lost['additional']);
+        } elseif ($lost['type'] === 'cat') {
+            $data['info_id'] = $this->cat->saveInfo($data['id'], $lost['additional']);
+        } else {
+            $data['info_id'] = $this->parrot->saveInfo($data['id'], $lost['additional']);
+        }
 
-        $this->db->insert($lost['type'] . 's', array('info' => $lost['additional']));
-        $data[$lost['type'].'_id'] = $this->db->insert_id();
+//        $data[$lost['type'] . '_id'] = $this->$lost['type']->saveInfo($data['id'], $lost['additional']);
 
-        $this->db->insert('animals_' . $lost['type'] . 's', array('animal_id' => $data['id'], 'id' => $data[$lost['type'].'_id']));
+//        $this->db->insert($lost['type'] . 's', array('info' => $lost['additional']));
+//        $data[$lost['type'].'_id'] = $this->db->insert_id();
+
+//        $this->db->insert('animals_' . $lost['type'] . 's', array('animal_id' => $data['id'], 'id' => $data[$lost['type'].'_id']));
 
         return $data;
     }

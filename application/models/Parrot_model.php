@@ -3,27 +3,32 @@
 class Parrot_model extends CI_Model {
 
     private $id;
+    private $tbl;
+    private $tbl2animals;
     private $additional;
 
     /**
-     * Animal_model constructor.
+     * Parrot_model constructor.
      */
     public function __construct()
     {
         parent::__construct();
+        $this->tbl = 'parrots';
+        $this->tbl2animals = 'animals_parrots';
     }
 
     /**
+     * @param int $animal_id
      * @param string $additional
      * @return mixed
      */
-    public function store( $additional = '' )
+    public function saveInfo($animal_id = 0, $additional = '')
     {
-        $this->additional = $additional;
-        $this->db->insert('parrots', array('additional' => $additional));
-        $this->id = $this->db->insert_id();
+        $this->db->insert('parrots', array('info' => $additional));
+        $id = $this->db->insert_id();
+        $this->db->insert('animals_parrots', array('animal_id' => $animal_id, 'id' => $id));
 
-        return $this->db->insert_id();
+        return $id;
     }
 
     /**

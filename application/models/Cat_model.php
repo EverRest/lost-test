@@ -3,27 +3,32 @@
 class Cat_model extends CI_Model {
 
     private $id;
+    private $tbl;
+    private $tbl2animals;
     private $additional;
 
     /**
-     * Animal_model constructor.
+     * Cat_model constructor.
      */
     public function __construct()
     {
         parent::__construct();
+        $this->tbl = 'cats';
+        $this->tbl2animals = 'animals_cats';
     }
 
     /**
+     * @param int $animal_id
      * @param string $additional
      * @return mixed
      */
-    public function store( $additional = '' )
+    public function saveInfo($animal_id = 0, $additional = '')
     {
-        $this->additional = $additional;
-        $this->db->insert('cats',  array('additional' => $additional));
-        $this->id = $this->db->insert_id();
+        $this->db->insert('cats', array('info' => $additional));
+        $id = $this->db->insert_id();
+        $this->db->insert('animals_cats', array('animal_id' => $animal_id, 'id' => $id));
 
-        return $this->db->insert_id();
+        return $id;
     }
 
     /**
