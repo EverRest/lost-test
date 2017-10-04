@@ -18,7 +18,6 @@ class Cat_model extends CI_Model {
         parent::__construct();
         $this->type = 'cat';
         $this->type_id = 2;
-        $this->tbl2animals = 'animals_cats';
     }
 
     /**
