@@ -6,10 +6,8 @@ class Cat_model extends CI_Model {
     use Animal;
 
     private $id;
-    private $tbl;
     private $type;
     private $type_id;
-    private $tbl2animals;
     private $additional;
 
     /**
@@ -18,7 +16,6 @@ class Cat_model extends CI_Model {
     public function __construct()
     {
         parent::__construct();
-        $this->tbl = 'cats';
         $this->type = 'cat';
         $this->type_id = 2;
         $this->tbl2animals = 'animals_cats';
@@ -68,29 +65,6 @@ class Cat_model extends CI_Model {
      */
     public function searchByPoly($poly = array())
     {
-        $lat = array();
-        $lng = array();
-
-        if($poly['ne']['lat'] > $poly['sw']['lat'])
-        {
-            $lat['min'] = $poly['sw']['lat'];
-            $lat['max'] = $poly['ne']['lat'];
-        } else {
-            $lat['max'] = $poly['sw']['lat'];
-            $lat['min'] = $poly['ne']['lat'];
-        }
-
-
-        if($poly['ne']['lng'] > $poly['sw']['lng'])
-        {
-            $lng['min'] = $poly['sw']['lng'];
-            $lng['max'] = $poly['ne']['lng'];
-        } else {
-            $lng['max'] = $poly['sw']['lng'];
-            $lng['min'] = $poly['ne']['lng'];
-        }
-
-
         return $this->searchPoly($this->type, $poly);
     }
 }

@@ -6,10 +6,8 @@ class Parrot_model extends CI_Model {
     use Animal;
 
     private $id;
-    private $tbl;
     private $type;
     private $type_id;
-    private $tbl2animals;
     private $additional;
 
     /**
@@ -20,8 +18,6 @@ class Parrot_model extends CI_Model {
         parent::__construct();
         $this->type = 'parrot';
         $this->type_id = 3;
-        $this->tbl = 'parrots';
-        $this->tbl2animals = 'animals_parrots';
     }
 
     /**
@@ -67,28 +63,6 @@ class Parrot_model extends CI_Model {
      */
     public function searchByPoly($poly = array())
     {
-        $lat = array();
-        $lng = array();
-
-        if($poly['ne']['lat'] > $poly['sw']['lat'])
-        {
-            $lat['min'] = $poly['sw']['lat'];
-            $lat['max'] = $poly['ne']['lat'];
-        } else {
-            $lat['max'] = $poly['sw']['lat'];
-            $lat['min'] = $poly['ne']['lat'];
-        }
-
-
-        if($poly['ne']['lng'] > $poly['sw']['lng'])
-        {
-            $lng['min'] = $poly['sw']['lng'];
-            $lng['max'] = $poly['ne']['lng'];
-        } else {
-            $lng['max'] = $poly['sw']['lng'];
-            $lng['min'] = $poly['ne']['lng'];
-        }
-
         return $this->searchPoly($this->type, $poly);
     }
 }

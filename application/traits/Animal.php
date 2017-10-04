@@ -70,36 +70,26 @@ if (!trait_exists('Animal')) {
         public function searchRadius($type = '', $coords = array(), $radius = 0)
         {
             $tbl = $type . 's';
-            $animals = $this->db->query("SELECT t3.*,
+            return  $this->db->query("SELECT t3.*,
                                     ( 3959 * acos( cos( radians( " . $coords['lat']
                                     . " ) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians("
                                     . $coords['lng'] . ") ) + sin( radians(" . $coords['lat']
                                     . ") ) * sin( radians( lat ) ) ) ) AS distance,
-                                    " . $radius . " AS radius
+                                    " . $radius . " AS radius,  t1.info, t4.name AS type 
                                     FROM animals AS t3
-                                    WHERE t3.type_id=" . $this->type_id ."
+                                    INNER JOIN animals_" . $tbl .  "  AS t2 ON t3.id = t2.animal_id
+                                    INNER JOIN " . $tbl . " AS t1 ON t2.id=t1.id
+                                    INNER JOIN types AS t4 ON t4.id=t3.type_id
                                     HAVING distance < " . $radius . "
-                                    ORDER BY distance LIMIT 0 , 10
+                                    ORDER BY distance
                                     ")->result();
-
-            foreach ($animals as $key => $row) {
-                if ($row->id > 0) {
-
-                    $row->additional = $this->db->query("SELECT t2.info
-                                          FROM animals_" . $tbl . " t1
-                                          LEFT JOIN " . $tbl . " t2 ON t1.id = t2.id
-                                          WHERE t1.animal_id=" . $row->id ."
-                                          LIMIT 1
-                                          ")->row();
-
-                    $row->type = $type;
-
-                }
-            }
-
-            return $animals;
         }
 
+        /**
+         * @param string $type
+         * @param array $poly
+         * @return mixed
+         */
         public function searchPoly($type = '', $poly = array())
         {
             $lat = array();

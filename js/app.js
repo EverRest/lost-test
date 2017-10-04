@@ -564,7 +564,6 @@ var App = (function () {
         data['lng'] = [ne.lng(),sw.lng()];
 
 
-        // setTimeout(function () {
             var ne = {
                     'lat': ne.lat(),
                     'lng': ne.lng()
@@ -574,59 +573,15 @@ var App = (function () {
                     'lng': sw.lng()
                     };
             filterByPolygon(ne, sw);
-        // }, 5000);
     }
 
-    // function addPoly() {
-    //     var bounds = {
-    //         north: 44.599,
-    //         south: 44.490,
-    //         east: -78.443,
-    //         west: -78.649
-    //     };
-    //
-    //     console.log(bounds);
-    //
-    //     // Define a rectangle and set its editable property to true.
-    //     var rectangle = new google.maps.Rectangle({
-    //         bounds: bounds,
-    //         editable: true
-    //     });
-    // }
-    
-    /**
-     * new point to polygon
-     * @param event
-     */
-    // function addLatLng(event) {
-    //     var path = poly.getPath();
-    //
-    //     if(path.length == 4){
-    //         var polygonOptions = {path:path,strokeColor:"#00DB00",fillColor:"#DBDB08"};
-    //         var polygon = new google.maps.Polygon(polygonOptions);
-    //         polygon.setMap(map);
-    //         filterByPolygon(poly_array);
-    //     }
-    //
-    //     path.push(event.latLng);
-    //     poly_array.push({'lat': event.latLng.lat(), 'lng':  event.latLng.lng()});
-    //
-    //     var marker = new google.maps.Marker({
-    //         position: event.latLng,
-    //         title: '#' + path.getLength(),
-    //         map: map,
-    //         icon: URL + 'img/polygon-marker.png'
-    //     });
-    // }
 
     /**
-     * @param data
+     * @param ne
+     * @param sw
      */
-    // function filterByPolygon( bounds ) {
     function filterByPolygon( ne, sw ) {
 
-        // console.log(data);
-        // if (bounds.length) {
             $.ajax({
                 url: URL + 'index.php/app/searchByPoly',
                 type: 'post',
@@ -637,7 +592,6 @@ var App = (function () {
                 success: function (res) {
                     console.log(res);
                     if (res.success) {
-                        // hideMarkers(map, $this.markers);
                         // render map
                         map = new google.maps.Map(document.getElementById('map'), {
                             center: {lat: -34.397, lng: 150.644},
@@ -645,15 +599,10 @@ var App = (function () {
                             zoom: 8
                         });
                         addMarkers(res.result);
+                        if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
                     } else {
                         alert('Error: Wrong Input!');
                     }
-                    // render map
-                    // map = new google.maps.Map(document.getElementById('map'), {
-                    //     center: {lat: -34.397, lng: 150.644},
-                    //     styles: mapStyles,
-                    //     zoom: 8
-                    // });
                 },
                 dataType: 'json',
                 error: function (XHR, status, response) {
@@ -661,9 +610,6 @@ var App = (function () {
                     console.log(status);
                 }
             });
-        // } else {
-        //     alert('Wrong input');
-        // }
     }
 
     /**
@@ -742,19 +688,13 @@ var App = (function () {
                         'radius': radius
                     },
                     success: function (res) {
-                        console.log(res);
-                        // if (res.success) {
-                        //     hideMarkers(map, $this.markers);
-                        //     addMarkers(res.result);
-                        // } else {
-                        //     alert('Error: Wrong Input!');
-                        // }
-                        // render map
-                        // map = new google.maps.Map(document.getElementById('map'), {
-                        //     center: {lat: -34.397, lng: 150.644},
-                        //     styles: mapStyles,
-                        //     zoom: 8
-                        // });
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: {lat: -34.397, lng: 150.644},
+                            styles: mapStyles,
+                            zoom: 8
+                        });
+                        addMarkers(res.result);
+                        if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
                     },
                     dataType: 'json',
                     error: function (XHR, status, response) {
@@ -767,209 +707,6 @@ var App = (function () {
             }
         }
 
-        /**
-         *
-         * @param coords
-         * @param radius
-         * return void
-         */
-        // function filterByRadius ( coords, radius ) {
-        //
-        //     if (radius && coords) {
-        //         $.ajax({
-        //             url: URL + 'index.php/app/searchByRadius',
-        //             type: 'get',
-        //             data: {
-        //                 'coords': coords,
-        //                 'radius': radius
-        //             },
-        //             success: function (res) {
-        //                 // render map
-        //                 map = new google.maps.Map(document.getElementById('map'), {
-        //                     center: {lat: -34.397, lng: 150.644},
-        //                     styles: [
-        //                         {
-        //                             "featureType": "road",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "lightness": -100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "road",
-        //                             "elementType": "geometry.stroke",
-        //                             "stylers": [
-        //                                 {
-        //                                     "lightness": -100
-        //                                 },
-        //                                 {
-        //                                     "visibility": "off"
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "road",
-        //                             "elementType": "labels.text.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "lightness": 100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "road",
-        //                             "elementType": "labels.text.stroke",
-        //                             "stylers": [
-        //                                 {
-        //                                     "visibility": "off"
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "water",
-        //                             "stylers": [
-        //                                 {
-        //                                     "visibility": "on"
-        //                                 },
-        //                                 {
-        //                                     "saturation": 100
-        //                                 },
-        //                                 {
-        //                                     "hue": "#006eff"
-        //                                 },
-        //                                 {
-        //                                     "lightness": -19
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "landscape",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "saturation": -100
-        //                                 },
-        //                                 {
-        //                                     "lightness": -16
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "hue": "#2bff00"
-        //                                 },
-        //                                 {
-        //                                     "lightness": -39
-        //                                 },
-        //                                 {
-        //                                     "saturation": 8
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi.attraction",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "lightness": 100
-        //                                 },
-        //                                 {
-        //                                     "saturation": -100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi.business",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "saturation": -100
-        //                                 },
-        //                                 {
-        //                                     "lightness": 100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi.government",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "lightness": 100
-        //                                 },
-        //                                 {
-        //                                     "saturation": -100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi.medical",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "lightness": 100
-        //                                 },
-        //                                 {
-        //                                     "saturation": -100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi.place_of_worship",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "lightness": 100
-        //                                 },
-        //                                 {
-        //                                     "saturation": -100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi.school",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "saturation": -100
-        //                                 },
-        //                                 {
-        //                                     "lightness": 100
-        //                                 }
-        //                             ]
-        //                         },
-        //                         {
-        //                             "featureType": "poi.sports_complex",
-        //                             "elementType": "geometry.fill",
-        //                             "stylers": [
-        //                                 {
-        //                                     "saturation": -100
-        //                                 },
-        //                                 {
-        //                                     "lightness": 100
-        //                                 }
-        //                             ]
-        //                         }
-        //                     ],
-        //                     zoom: 8
-        //                 });
-        //                 addMarkers(res.result);
-        //             },
-        //             dataType: 'json',
-        //             error: function (XHR, status, response) {
-        //                 console.log(XHR);
-        //                 console.log(status);
-        //             }
-        //         });
-        //     } else {
-        //         alert('Wrong input');
-        //     }
-        // }
 
         /**
          * to radians
@@ -1027,16 +764,6 @@ var App = (function () {
     };
 
     /**
-     * return void
-     */
-    function initPreloader () {
-        setTimeout(function () {
-            $('.loader').hide('fast');
-            $('.map').show('fast');
-        }, 1500);
-    }
-
-    /**
      * ajax search by text
      * return void
      */
@@ -1053,7 +780,6 @@ var App = (function () {
                    'search': search
                 },
                 success: function (res) {
-                    console.log(res);
                     // render map
                     map = new google.maps.Map(document.getElementById('map'), {
                         center: {lat: -34.397, lng: 150.644},
@@ -1320,15 +1046,6 @@ var App = (function () {
               icon: 'img/marker.png',
               draggable: true
           });
-
-
-          //add tootltips
-
-          // marker.tooltipContent = markers[i].name.toUpperCase();
-
-          // google.maps.event.addListener(marker, 'mouseout', function () {
-          //     $('#marker-tooltip').hide();
-          // });
 
         // add InfoWindow
           google.maps.event.addListener(marker, 'click', (function (marker, i) {

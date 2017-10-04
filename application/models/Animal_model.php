@@ -5,6 +5,8 @@ class Animal_model extends CI_Model {
     private $id;
     private $name;
     private $type_id;
+    private $types;
+    private $animals = array();
     private $photo;
     private $lat;
     private $lng;
@@ -16,9 +18,17 @@ class Animal_model extends CI_Model {
     {
         parent::__construct();
         $this->load->model('Type_model', 'type');
-        $this->load->model('Dog_model', 'dog');
-        $this->load->model('Cat_model', 'cat');
-        $this->load->model('Parrot_model', 'parrot');
+//        $this->load->model('Dog_model', 'dog');
+//        $this->load->model('Cat_model', 'cat');
+//        $this->load->model('Parrot_model', 'parrot');
+        $this->types = $this->type->allTypes();
+
+        foreach ($this->types as $value => $type)
+        {
+            $model = ucfirst($type->name) . '_model';
+            $this->load->model($model, $type->name);
+            $this->animals[] = $type->name;
+        }
     }
 
     /**
@@ -45,71 +55,6 @@ class Animal_model extends CI_Model {
 
         return false;
     }
-
-//
-//    /**
-//     * @param array $poly_arr
-//     * @return mixed
-//     */
-//    public function searchByPoly($poly = array())
-//    {
-//
-//        $lat = array();
-//        $lng = array();
-//
-//        if($poly['ne']['lat'] > $poly['sw']['lat'])
-//        {
-//            $lat['min'] = $poly['sw']['lat'];
-//            $lat['max'] = $poly['ne']['lat'];
-//        } else {
-//            $lat['max'] = $poly['sw']['lat'];
-//            $lat['min'] = $poly['ne']['lat'];
-//        }
-//
-//
-//        if($poly['ne']['lng'] > $poly['sw']['lng'])
-//        {
-//            $lng['min'] = $poly['sw']['lng'];
-//            $lng['max'] = $poly['ne']['lng'];
-//        } else {
-//            $lng['max'] = $poly['sw']['lng'];
-//            $lng['min'] = $poly['ne']['lng'];
-//        }
-//
-//
-//        $animals = $this->db->query("SELECT * " .
-//                                    "FROM animals WHERE " .
-//                                    "(lat BETWEEN " . $this->db->escape_str($lat['min']) . " AND " . $this->db->escape_str($lat['max']) . ") AND " .
-//                                    "(lng BETWEEN " . $this->db->escape_str($lng['min']) . " AND " . $this->db->escape_str($lng['max']) . ") ORDER BY id ASC")->result();
-//
-//
-//        foreach ($animals as $key => $row) {
-//            if ($row->id > 0) {
-//
-//                $additional = $this->getAdditional($row->type_id);
-//                $type = $this->getType($row->type_id);
-//
-//
-//                $row->additional = $this->db->query("SELECT t2.info
-//                                      FROM animals_" . $type . "s t1
-//                                      LEFT JOIN " . $type . "s t2 ON t1.id = t2.id
-//                                      WHERE t1.animal_id=" . $row->id ."
-//                                      LIMIT 1
-//                                      ")->result();
-//
-//
-//                $this->db->select('name');
-//                $this->db->from('types');
-//                $this->db->where('id', $row->type_id);
-//                $this->db->limit(1);
-//                $query = $this->db->get();
-//
-//                $row->type = $query->result();
-//
-//            }
-//        }
-//        return $animals;
-//    }
 
     /**
      * store info about animal
@@ -150,12 +95,13 @@ class Animal_model extends CI_Model {
      */
     public function searchByText( $str = '')
     {
+        $res = array();
 
-        $dogs = $this->dog->searchByText($str);
-        $cats = $this->cat->searchByText($str);
-        $parrots = $this->parrot->searchByText($str);
-
-        return array_merge($dogs,$cats,$parrots);
+        foreach ($this->animals as $animal) {
+            $tmp = $this->$animal->searchByText($str);
+            $res = (empty($res))? $tmp : array_merge($res, $tmp);
+        }
+        return $res;
     }
 
     /**
@@ -163,11 +109,14 @@ class Animal_model extends CI_Model {
      */
     public function getAll()
     {
-        $dogs = $this->dog->all();
-        $cats = $this->cat->all();
-        $parrots = $this->parrot->all();
+        $res = array();
 
-        return array_merge($dogs,$cats,$parrots);
+        foreach ($this->animals as $animal) {
+            $tmp = $this->$animal->all();
+            $res = (empty($res))? $tmp : array_merge($res, $tmp);
+        }
+
+        return $res;
     }
 
     /**
@@ -177,11 +126,14 @@ class Animal_model extends CI_Model {
      */
     public function searchByRadius($coords = array(), $radius = 0)
     {
-        $dogs = $this->dog->searchByRadius( $coords, $radius);
-        $cats = $this->cat->searchByRadius( $coords, $radius);
-        $parrots = $this->parrot->searchByRadius( $coords, $radius);
+        $res = array();
 
-        return array_merge($dogs,$cats,$parrots);
+        foreach ($this->animals as $animal) {
+            $tmp = $this->$animal->searchByRadius($coords, $radius);
+            $res = (empty($res))? $tmp : array_merge($res, $tmp);
+        }
+
+        return $res;
     }
 
 
@@ -191,12 +143,15 @@ class Animal_model extends CI_Model {
      */
     public function searchByPoly($poly = array())
     {
-        $dogs = $this->dog->searchByPoly($poly);
-        $cats = $this->cat->searchByPoly($poly);
-        $parrots = $this->parrot->searchByPoly($poly);
 
+        $res = array();
 
-        return array_merge($dogs, $cats, $parrots);
+        foreach ($this->animals as $animal) {
+            $tmp = $this->$animal->searchByPoly($poly);
+            $res = (empty($res))? $tmp : array_merge($res, $tmp);
+        }
+
+        return $res;
     }
 
 }

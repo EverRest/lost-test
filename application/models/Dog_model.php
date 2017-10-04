@@ -6,10 +6,8 @@ class Dog_model extends CI_Model {
     use Animal;
 
     private $id;
-    private $tbl;
     private $type;
     private $type_id;
-    private $tbl2animals;
     private $additional;
 
     /**
@@ -18,10 +16,8 @@ class Dog_model extends CI_Model {
     public function __construct()
     {
         parent::__construct();
-        $this->tbl = 'dogs';
         $this->type = 'dog';
         $this->type_id = 1;
-        $this->tbl2animals = 'animals_dogs';
     }
 
     /**
@@ -67,7 +63,6 @@ class Dog_model extends CI_Model {
      */
     public function searchByPoly($poly = array())
     {
-
         return $this->searchPoly($this->type, $poly);
     }
 }

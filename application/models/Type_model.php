@@ -44,7 +44,7 @@ class Type_model extends CI_Model {
     /**
      * @return mixed
      */
-    public function all()
+    public function allTypes()
     {
         return $this->db->query("SELECT *  
                                   FROM types
