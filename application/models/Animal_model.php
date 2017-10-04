@@ -18,9 +18,6 @@ class Animal_model extends CI_Model {
     {
         parent::__construct();
         $this->load->model('Type_model', 'type');
-//        $this->load->model('Dog_model', 'dog');
-//        $this->load->model('Cat_model', 'cat');
-//        $this->load->model('Parrot_model', 'parrot');
         $this->types = $this->type->allTypes();
 
         foreach ($this->types as $value => $type)

@@ -1,5 +1,5 @@
 <?php
-include APPPATH . 'traits/Animal.php';
+include_once APPPATH . 'traits/Animal.php';
 
 class Dog_model extends CI_Model {
 
