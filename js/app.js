@@ -1,14 +1,17 @@
+URL = $('main').data('url');
+
 var App = (function () {
 
     var app,
         $this = this,
         rectangle,
+        animals = [],
         map = {},
         lost = {},
         marker,
         infowindow = {},
         markers = [],
-        URL = $('main').data('url'),
+        // URL = $('main').data('url'),
         mapStyles = [
             {
                 "featureType": "road",
@@ -414,16 +417,8 @@ var App = (function () {
      * return void
      */
     function save( lost ) {
-
-        $.ajax({
-            url: URL + 'index.php/app/save',
-            type: "POST",
-            data: lost,
-            success: function (data) {
-                if (data.success) console.log('success');
-            },
-            dataType: 'json'
-        });
+        var animal = new Animal(lost.name, lost.type, lost.photo, lost.lat, lost.lng, lost.additional);
+        animal.save(animal);
     }
 
     /**

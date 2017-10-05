@@ -76,11 +76,11 @@ class Animal_model extends CI_Model {
 
         // save additional info
         if ($lost['type'] === 'dog') {
-            $data['info_id'] = $this->dog->saveInfo($data['id'], $lost['additional']);
+            $data['info_id'] = $this->dog->saveInfo($data['id'], $lost['info']);
         } elseif ($lost['type'] === 'cat') {
-            $data['info_id'] = $this->cat->saveInfo($data['id'], $lost['additional']);
+            $data['info_id'] = $this->cat->saveInfo($data['id'], $lost['info']);
         } else {
-            $data['info_id'] = $this->parrot->saveInfo($data['id'], $lost['additional']);
+            $data['info_id'] = $this->parrot->saveInfo($data['id'], $lost['info']);
         }
 
         return $data;

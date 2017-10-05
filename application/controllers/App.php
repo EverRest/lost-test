@@ -48,7 +48,7 @@ class App extends CI_Controller
             $this->load->helper("security");
 
             $post['name'] = $this->security->xss_clean($_POST['name']);
-            $post['additional'] = $this->security->xss_clean($_POST['additional']);
+            $post['info'] = $this->security->xss_clean($_POST['info']);
             $post['type'] = $this->security->xss_clean($_POST['type']);
             $post['lat'] = $this->security->xss_clean($_POST['lat']);
             $post['lng'] = $this->security->xss_clean($_POST['lng']);
@@ -62,11 +62,11 @@ class App extends CI_Controller
                 $response['messages'][] = 'name';
             }
 
-            if (empty($post['additional']))
+            if (empty($post['info']))
             {
                 $response['success'] = false;
                 $response['errors']++;
-                $response['messages'][] = 'additional';
+                $response['messages'][] = 'info';
             }
 
             if (empty($post['type']))

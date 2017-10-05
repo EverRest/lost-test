@@ -1,12 +1,7 @@
 <?php
 
 if (!trait_exists('Animal')) {
-    /**
-     * Created by PhpStorm.
-     * User: Pavlo
-     * Date: 04.10.2017
-     * Time: 15:59
-     */
+
     trait Animal
     {
         /**

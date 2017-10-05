@@ -14,6 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <!-- Custom JS scripts -->
 <script type = 'text/javascript' src = "<?= base_url(); ?>js/app.js"></script>
+<script type = 'text/javascript' src = "<?= base_url(); ?>js/animals.js"></script>
 <script type = 'text/javascript' src = "<?= base_url(); ?>js/main.js"></script>
 </body>
 </html>
