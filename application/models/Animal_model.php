@@ -1,6 +1,9 @@
 <?php
+include_once APPPATH . 'traits/Model.php';
 
-class Animal_model extends CI_Model {
+class Animal_model extends CI_Model
+{
+    use Model;
 
     private $id;
     private $name;
@@ -26,6 +29,8 @@ class Animal_model extends CI_Model {
             $this->load->model($model, $type->name);
             $this->animals[] = $type->name;
         }
+
+        $this->setTbl('animals');
     }
 
     /**

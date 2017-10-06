@@ -40,6 +40,13 @@ Animal.prototype.save = function(animal) {
 };
 
 /**
+ * return animal json
+ */
+Animal.prototype.toJson = function () {
+    return JSON.stringify(this);
+}
+
+/**
  * test function
  * return void
  */
@@ -50,59 +57,71 @@ Animal.prototype.sayHello = function() {
 
 /**
  * Class Dog
- * @param animal_id
  * @param id
  * @param name
- * @param type_id
+ * @param type
  * @param photo
  * @param lat
  * @param lng
  * @param info
  * @constructor
  */
-function Dog(animal_id, id, name, type_id, photo, lat, lng, info) {
-    Animal.apply(this, arguments);
+function Dog(id, name, type, photo, lat, lng, info) {
+
     this.id = id;
     this.type = 'dog';
-    this.animal_id = animal_id;
+    this.type_id = 1;
+    this.name = name;
+    this.photo = photo;
+    this.lat = lat;
+    this.lng = lng;
+    this.info = info;
 }
 
 /**
- * Cat
- * @param animal_id
+ * Class Cat
  * @param id
  * @param name
- * @param type_id
+ * @param type
  * @param photo
  * @param lat
  * @param lng
  * @param info
  * @constructor
  */
-function Cat(animal_id, id, name, type_id, photo, lat, lng, info) {
-    Animal.apply(this, arguments);
+function Cat(id, name, type, photo, lat, lng, info) {
+
     this.id = id;
     this.type = 'cat';
-    this.animal_id = animal_id;
+    this.type_id = 2;
+    this.name = name;
+    this.photo = photo;
+    this.lat = lat;
+    this.lng = lng;
+    this.info = info;
 }
 
 /**
- * Parrot
- * @param animal_id
+ * Class Parrot
  * @param id
  * @param name
- * @param type_id
+ * @param type
  * @param photo
  * @param lat
  * @param lng
  * @param info
  * @constructor
  */
-function Parrot(animal_id, id, name, type_id, photo, lat, lng, info) {
-    Animal.apply(this, arguments);
+function Parrot(id, name, type, photo, lat, lng, info) {
+
     this.id = id;
     this.type = 'parrot';
-    this.animal_id = animal_id;
+    this.type_id = 3;
+    this.name = name;
+    this.photo = photo;
+    this.lat = lat;
+    this.lng = lng;
+    this.info = info;
 }
 
 

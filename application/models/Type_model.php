@@ -1,7 +1,9 @@
 <?php
+include_once APPPATH . 'traits/Model.php';
 
-class Type_model extends CI_Model {
-
+class Type_model extends CI_Model
+{
+    use Model;
     private $id;
     private $name;
 
@@ -11,6 +13,7 @@ class Type_model extends CI_Model {
     public function __construct()
     {
         parent::__construct();
+        $this->setTbl('types');
     }
 
     /**
@@ -31,7 +34,7 @@ class Type_model extends CI_Model {
      * @param string $type
      * @return int
      */
-    public function geIdByType( $type = '' )
+    public function getIdByType( $type = '' )
     {
         $res = $this->db->query("SELECT id AS type_id  
                                   FROM types

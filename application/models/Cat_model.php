@@ -1,69 +1,14 @@
 <?php
-include_once APPPATH . 'traits/Animal.php';
+include_once APPPATH . 'models/Animal_Base.php';
 
-class Cat_model extends CI_Model {
-
-    use Animal;
-
-    private $id;
-    private $type;
-    private $type_id;
-    private $additional;
-
+class Cat_model extends Animal_Base
+{
     /**
      * Cat_model constructor.
      */
     public function __construct()
     {
-        parent::__construct();
-        $this->type = 'cat';
-        $this->type_id = 2;
+        parent::__construct('cat', 2);
     }
 
-    /**
-     * @param int $animal_id
-     * @param string $additional
-     * @return mixed
-     */
-    public function saveInfo($animal_id = 0, $additional = '')
-    {
-        return $this->saveAnimal($this->type, $animal_id, $additional);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function all()
-    {
-        return $this->allTypicalAnimals($this->type);
-    }
-
-    /**
-     * @param string $str
-     * @return mixed
-     */
-    public function searchByText( $str = '')
-    {
-        return $this->searchText($this->type, $str);
-    }
-
-
-    /**
-     * @param array $coords
-     * @param int $radius
-     * @return mixed
-     */
-    public function searchByRadius($coords = array(), $radius = 0)
-    {
-        return $this->searchRadius($this->type, $coords, $radius);
-    }
-
-    /**
-     * @param array $poly_arr
-     * @return mixed
-     */
-    public function searchByPoly($poly = array())
-    {
-        return $this->searchPoly($this->type, $poly);
-    }
 }

@@ -255,7 +255,8 @@ var App = (function () {
         $.ajax({
             url: URL + 'index.php/app/getData',
             success: function (res) {
-                addMarkers(res);
+                animals = addAnimals(res);
+                addMarkers(animals);
             },
             dataType: 'json',
             error: function (XHR, status, response) {
@@ -266,6 +267,38 @@ var App = (function () {
     };
 
     /**
+     * add animals to array
+     * @param res
+     * @returns {Array}
+     */
+    function addAnimals(res) {
+        var animals = [];
+        $(res).each(function (i) {
+            var animal  = false;
+
+            switch (this.type) {
+
+                case 'dog':
+                    animal = new Dog(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info);
+                    break;
+
+                case 'cat':
+                    animal = new Cat(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info);
+                    break;
+
+                case 'parrot':
+                    animal = new Parrot(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info);
+                    break;
+
+            }
+
+            animals.push(animal);
+        });
+
+        return animals;
+    }
+
+    /**
      * get Info from backend
      * return void
      */
@@ -273,7 +306,8 @@ var App = (function () {
         $.ajax({
             url: URL + 'index.php/app/getData',
             success: function (res) {
-                addMarkers(res);
+                animals = addAnimals(res);
+                addMarkers(animals);
             },
             dataType: 'json',
             error: function (XHR, status, response) {
@@ -585,7 +619,6 @@ var App = (function () {
                     'sw': sw
                 },
                 success: function (res) {
-                    console.log(res);
                     if (res.success) {
                         // render map
                         map = new google.maps.Map(document.getElementById('map'), {
@@ -593,7 +626,10 @@ var App = (function () {
                             styles: mapStyles,
                             zoom: 8
                         });
-                        addMarkers(res.result);
+
+                        animals = addAnimals(res.result);
+                        addMarkers(animals);
+
                         if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
                     } else {
                         alert('Error: Wrong Input!');
@@ -683,13 +719,21 @@ var App = (function () {
                         'radius': radius
                     },
                     success: function (res) {
-                        map = new google.maps.Map(document.getElementById('map'), {
-                            center: {lat: -34.397, lng: 150.644},
-                            styles: mapStyles,
-                            zoom: 8
-                        });
-                        addMarkers(res.result);
-                        if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
+
+                        if (res.success) {
+                            map = new google.maps.Map(document.getElementById('map'), {
+                                center: {lat: -34.397, lng: 150.644},
+                                styles: mapStyles,
+                                zoom: 8
+                            });
+
+                            animals = addAnimals(res.result);
+                            addMarkers(animals);
+
+                            if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
+                        } else {
+                            alert('Error: Wrong Input!');
+                        }
                     },
                     dataType: 'json',
                     error: function (XHR, status, response) {
@@ -775,182 +819,190 @@ var App = (function () {
                    'search': search
                 },
                 success: function (res) {
-                    // render map
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: {lat: -34.397, lng: 150.644},
-                        styles: [
-                            {
-                                "featureType": "road",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "lightness": -100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road",
-                                "elementType": "geometry.stroke",
-                                "stylers": [
-                                    {
-                                        "lightness": -100
-                                    },
-                                    {
-                                        "visibility": "off"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road",
-                                "elementType": "labels.text.fill",
-                                "stylers": [
-                                    {
-                                        "lightness": 100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "road",
-                                "elementType": "labels.text.stroke",
-                                "stylers": [
-                                    {
-                                        "visibility": "off"
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "water",
-                                "stylers": [
-                                    {
-                                        "visibility": "on"
-                                    },
-                                    {
-                                        "saturation": 100
-                                    },
-                                    {
-                                        "hue": "#006eff"
-                                    },
-                                    {
-                                        "lightness": -19
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "landscape",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "saturation": -100
-                                    },
-                                    {
-                                        "lightness": -16
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "hue": "#2bff00"
-                                    },
-                                    {
-                                        "lightness": -39
-                                    },
-                                    {
-                                        "saturation": 8
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.attraction",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "lightness": 100
-                                    },
-                                    {
-                                        "saturation": -100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.business",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "saturation": -100
-                                    },
-                                    {
-                                        "lightness": 100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.government",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "lightness": 100
-                                    },
-                                    {
-                                        "saturation": -100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.medical",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "lightness": 100
-                                    },
-                                    {
-                                        "saturation": -100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.place_of_worship",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "lightness": 100
-                                    },
-                                    {
-                                        "saturation": -100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.school",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "saturation": -100
-                                    },
-                                    {
-                                        "lightness": 100
-                                    }
-                                ]
-                            },
-                            {
-                                "featureType": "poi.sports_complex",
-                                "elementType": "geometry.fill",
-                                "stylers": [
-                                    {
-                                        "saturation": -100
-                                    },
-                                    {
-                                        "lightness": 100
-                                    }
-                                ]
-                            }
-                        ],
-                        zoom: 8
-                    });
-                    addMarkers(res.result);
-                    if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
+                    if (res.success) {
+                        // render map
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: {lat: -34.397, lng: 150.644},
+                            styles: [
+                                {
+                                    "featureType": "road",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "lightness": -100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road",
+                                    "elementType": "geometry.stroke",
+                                    "stylers": [
+                                        {
+                                            "lightness": -100
+                                        },
+                                        {
+                                            "visibility": "off"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "lightness": 100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road",
+                                    "elementType": "labels.text.stroke",
+                                    "stylers": [
+                                        {
+                                            "visibility": "off"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "water",
+                                    "stylers": [
+                                        {
+                                            "visibility": "on"
+                                        },
+                                        {
+                                            "saturation": 100
+                                        },
+                                        {
+                                            "hue": "#006eff"
+                                        },
+                                        {
+                                            "lightness": -19
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "landscape",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "saturation": -100
+                                        },
+                                        {
+                                            "lightness": -16
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "hue": "#2bff00"
+                                        },
+                                        {
+                                            "lightness": -39
+                                        },
+                                        {
+                                            "saturation": 8
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.attraction",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "lightness": 100
+                                        },
+                                        {
+                                            "saturation": -100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.business",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "saturation": -100
+                                        },
+                                        {
+                                            "lightness": 100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.government",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "lightness": 100
+                                        },
+                                        {
+                                            "saturation": -100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.medical",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "lightness": 100
+                                        },
+                                        {
+                                            "saturation": -100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.place_of_worship",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "lightness": 100
+                                        },
+                                        {
+                                            "saturation": -100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.school",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "saturation": -100
+                                        },
+                                        {
+                                            "lightness": 100
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.sports_complex",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "saturation": -100
+                                        },
+                                        {
+                                            "lightness": 100
+                                        }
+                                    ]
+                                }
+                            ],
+                            zoom: 8
+                        });
+
+                        animals = addAnimals(res.result);
+                        addMarkers(animals);
+
+                        if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
+
+                    } else {
+                        alert('Error: Wrong Input!');
+                    }
                 },
                 dataType: 'json',
                 error: function (XHR, status, response) {
@@ -1017,11 +1069,6 @@ var App = (function () {
               right: '50px', top: '0px' // button repositioning
           });
 
-        // The API automatically applies 0.7 opacity to the button after the mouseout event.
-        // This function reverses this event to the desired value.
-        //   iwCloseBtn.mouseout(function(){
-        //       $(this).css({opacity: '1'});
-        //   });
       });
 
        $this.markers = [];
@@ -1030,7 +1077,7 @@ var App = (function () {
 
           marker = 0;
 
-          if (!markers[i].name && !markers[i].additional.length && !markers[i].type.length &&
+          if (!markers[i].name && !markers[i].type &&
               !markers[i].photo && !markers[i].lat && !markers[i].lng) continue;
 
           var Coordinate = new google.maps.LatLng(1 * markers[i].lat, 1 * markers[i].lng);
@@ -1045,8 +1092,7 @@ var App = (function () {
         // add InfoWindow
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
-              if (!markers[i].info) console.log('empty additional info');
-              // markers[i].additional = markers[i].additional;
+              if (!markers[i].info) console.log('empty info info');
 
               var str = '';
 
