@@ -7,15 +7,17 @@
  * @param lat
  * @param lng
  * @param info
+ * @param address
  * @constructor
  */
-function Animal(name, type, photo, lat, lng, info) {
+function Animal(name, type, photo, lat, lng, info, address) {
     this.name = name;
     this.type = type;
     this.photo = photo;
     this.lat = lat;
     this.lng = lng;
     this.info = info;
+    this.address = address;
 }
 
 /**
@@ -35,16 +37,13 @@ Animal.prototype.save = function(animal) {
                 alert('Error: Can not save the animal!');
             }
         },
-        dataType: 'json'
+        dataType: 'json',
+        error: function (XHR, status, response) {
+            console.log(XHR);
+            console.log(status);
+        }
     });
 };
-
-/**
- * return animal json
- */
-Animal.prototype.toJson = function () {
-    return JSON.stringify(this);
-}
 
 /**
  * test function
@@ -64,9 +63,10 @@ Animal.prototype.sayHello = function() {
  * @param lat
  * @param lng
  * @param info
+ * @param address
  * @constructor
  */
-function Dog(id, name, type, photo, lat, lng, info) {
+function Dog(id, name, type, photo, lat, lng, info, address) {
 
     this.id = id;
     this.type = 'dog';
@@ -76,6 +76,7 @@ function Dog(id, name, type, photo, lat, lng, info) {
     this.lat = lat;
     this.lng = lng;
     this.info = info;
+    this.address = address;
 }
 
 /**
@@ -87,9 +88,10 @@ function Dog(id, name, type, photo, lat, lng, info) {
  * @param lat
  * @param lng
  * @param info
+ * @param address
  * @constructor
  */
-function Cat(id, name, type, photo, lat, lng, info) {
+function Cat(id, name, type, photo, lat, lng, info, address) {
 
     this.id = id;
     this.type = 'cat';
@@ -99,6 +101,7 @@ function Cat(id, name, type, photo, lat, lng, info) {
     this.lat = lat;
     this.lng = lng;
     this.info = info;
+    this.address = address;
 }
 
 /**
@@ -110,9 +113,10 @@ function Cat(id, name, type, photo, lat, lng, info) {
  * @param lat
  * @param lng
  * @param info
+ * @param address
  * @constructor
  */
-function Parrot(id, name, type, photo, lat, lng, info) {
+function Parrot(id, name, type, photo, lat, lng, info, address) {
 
     this.id = id;
     this.type = 'parrot';
@@ -122,6 +126,7 @@ function Parrot(id, name, type, photo, lat, lng, info) {
     this.lat = lat;
     this.lng = lng;
     this.info = info;
+    this.address = address;
 }
 
 

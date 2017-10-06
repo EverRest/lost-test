@@ -10,6 +10,7 @@ class Animal_model extends CI_Model
     private $type_id;
     private $types;
     private $animals = array();
+    private $address;
     private $photo;
     private $lat;
     private $lng;
@@ -21,7 +22,7 @@ class Animal_model extends CI_Model
     {
         parent::__construct();
         $this->load->model('Type_model', 'type');
-        $this->types = $this->type->allTypes();
+        $this->types = $this->type->getAll();
 
         foreach ($this->types as $value => $type)
         {
@@ -69,11 +70,12 @@ class Animal_model extends CI_Model
         $data = array();
 
         $data['name'] = $lost['name'];
-        $data['type_id'] = $this->type->geIdByType($lost['type']);
+        $data['type_id'] = $this->type->getIdByType($lost['type']);
 
         $data['photo'] = 'uploads/animals/' . $lost['photo'];
         $data['lat'] = $lost['lat'];
         $data['lng'] = $lost['lng'];
+        $data['address'] = !empty($lost['address'])? $lost['address'] : '';
 
         // save animal
         $this->db->insert('animals', $data);

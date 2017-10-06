@@ -279,15 +279,15 @@ var App = (function () {
             switch (this.type) {
 
                 case 'dog':
-                    animal = new Dog(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info);
+                    animal = new Dog(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info, this.address);
                     break;
 
                 case 'cat':
-                    animal = new Cat(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info);
+                    animal = new Cat(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info, this.address);
                     break;
 
                 case 'parrot':
-                    animal = new Parrot(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info);
+                    animal = new Parrot(this.id, this.name, this.type_id, this.photo, this.lat, this.lng, this.info, this.address);
                     break;
 
             }
@@ -403,10 +403,10 @@ var App = (function () {
             if (lost.name && lost.type && lost.additional && lost.photo) {
                 $('#name').val('');
                 $('#additional').val('');
+                $('#map-search').val('');
 
                 lostModal.find('.modal-header').append(mess);
                 lostModal.find('.modal-body').slideToggle('fast');
-                // hideMarkers(map, $this.markers);
 
                 setTimeout(function () {
                     addMarkerEvent();
@@ -451,8 +451,30 @@ var App = (function () {
      * return void
      */
     function save( lost ) {
-        var animal = new Animal(lost.name, lost.type, lost.photo, lost.lat, lost.lng, lost.additional);
-        animal.save(animal);
+        // console.log(getAddress( lost.lat, lost.lng));
+        // var address = false;
+        // address = $.getJSON('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lost.lat +',' + lost.lng +'&key=AIzaSyCmzPGoH3jCuOIPnPrDY9_DmgFcTPW1lnY', function (data) {
+        //     return data.results;
+        // });
+        // address = address.getAllResponseHeaders();
+        // var parsed = JSON.parse(address);
+        // console.log(address.response);
+        // if(address.status != 'OK') console.log('Can not get address from coordinates!');
+
+        // (address.results.length)? lost.address = address.results[0].formatted_address : 'No address';
+
+        var geocoder = new google.maps.Geocoder(),
+            location = { 'lat': 1*lost.lat, 'lng': 1*lost.lng },
+            address = '';
+
+        // use geocoder to find the adrress
+        geocoder.geocode({ 'location': location }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                (results.length)? lost.address = results[0].formatted_address : '';
+                var animal = new Animal(lost.name, lost.type, lost.photo, lost.lat, lost.lng, lost.additional, lost.address);
+                animal.save(lost);
+            }
+        });
     }
 
     /**
@@ -530,7 +552,7 @@ var App = (function () {
                             '<h3>' + lost.type.toUpperCase()  + '</h3>'+
                             '</div><div class="iw-main ' + lost.type + '-bg">'+
                             '<img class="lost-img" src="' + URL + 'uploads/animals/' + lost.photo +'" alt="' + lost.name +'">' +
-                            '<p><span>Address: </span><span>( ' + marker.lat + ', ' + marker.lng  + ' )</span></p>' +
+                            '<p><span>Address: </span><span>( ' + lost.address  + ' )</span></p>' +
                             '<div class="iw-text"><p><span>Name: </span><stromg>' + lost.name.toUpperCase()  + '</stromg></p>' +
                             '<p><span>Sort: </span><span>' + lost.additional  + '</span></p>' +
                             '</div>'+
@@ -819,179 +841,11 @@ var App = (function () {
                    'search': search
                 },
                 success: function (res) {
-                    if (res.success) {
+                    if (res.success && res.result.length) {
                         // render map
                         map = new google.maps.Map(document.getElementById('map'), {
                             center: {lat: -34.397, lng: 150.644},
-                            styles: [
-                                {
-                                    "featureType": "road",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "lightness": -100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "road",
-                                    "elementType": "geometry.stroke",
-                                    "stylers": [
-                                        {
-                                            "lightness": -100
-                                        },
-                                        {
-                                            "visibility": "off"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "road",
-                                    "elementType": "labels.text.fill",
-                                    "stylers": [
-                                        {
-                                            "lightness": 100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "road",
-                                    "elementType": "labels.text.stroke",
-                                    "stylers": [
-                                        {
-                                            "visibility": "off"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "water",
-                                    "stylers": [
-                                        {
-                                            "visibility": "on"
-                                        },
-                                        {
-                                            "saturation": 100
-                                        },
-                                        {
-                                            "hue": "#006eff"
-                                        },
-                                        {
-                                            "lightness": -19
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "landscape",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "saturation": -100
-                                        },
-                                        {
-                                            "lightness": -16
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "hue": "#2bff00"
-                                        },
-                                        {
-                                            "lightness": -39
-                                        },
-                                        {
-                                            "saturation": 8
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi.attraction",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "lightness": 100
-                                        },
-                                        {
-                                            "saturation": -100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi.business",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "saturation": -100
-                                        },
-                                        {
-                                            "lightness": 100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi.government",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "lightness": 100
-                                        },
-                                        {
-                                            "saturation": -100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi.medical",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "lightness": 100
-                                        },
-                                        {
-                                            "saturation": -100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi.place_of_worship",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "lightness": 100
-                                        },
-                                        {
-                                            "saturation": -100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi.school",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "saturation": -100
-                                        },
-                                        {
-                                            "lightness": 100
-                                        }
-                                    ]
-                                },
-                                {
-                                    "featureType": "poi.sports_complex",
-                                    "elementType": "geometry.fill",
-                                    "stylers": [
-                                        {
-                                            "saturation": -100
-                                        },
-                                        {
-                                            "lightness": 100
-                                        }
-                                    ]
-                                }
-                            ],
+                            styles: mapStyles,
                             zoom: 8
                         });
 
@@ -1001,7 +855,11 @@ var App = (function () {
                         if (res.result.length) map.setCenter({'lat': 1 * res.result[0].lat, 'lng': 1 * res.result[0].lng});
 
                     } else {
-                        alert('Error: Wrong Input!');
+                        if (!res.success) alert('Error: Wrong Input!');
+                        $('#map').append('<div class="lost-success"><h2>The search result is empty!!!<br>Please try again.</h2></div>');
+                        setTimeout(function () {
+                            $('.lost-success').remove();
+                        }, 3000);
                     }
                 },
                 dataType: 'json',
@@ -1093,6 +951,7 @@ var App = (function () {
           google.maps.event.addListener(marker, 'click', (function (marker, i) {
 
               if (!markers[i].info) console.log('empty info info');
+              if (!markers[i].address) markers[i].address = 'No address';
 
               var str = '';
 
@@ -1104,7 +963,7 @@ var App = (function () {
                             '</div><div class="iw-main ' + markers[i].type + '-bg">'+
                             '<div class="iw-text">' +
                             '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
-                            '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p>' +
+                            '<p><span>Address: </span><span>' + markers[i].address + '</span></p>' +
                             '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
                             '<p><span>Sort: </span><span>' + markers[i].info + '</span></p>' +
                             '</div>'+
@@ -1116,7 +975,7 @@ var App = (function () {
                           '<h3>' + markers[i].type.toUpperCase()  + '</h3>'+
                           '</div><div class="iw-main ' + markers[i].type + '-bg">'+
                           '<div class="iw-text"><p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
-                          '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
+                          '<p><span>Address: </span><span>' + markers[i].address + '</span></p></div>' +
                           '<img class="lost-img" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
                           '<p><span>Color: </span><span>' + markers[i].info  + '</span></p>' +
                           '</div>'+
@@ -1128,7 +987,7 @@ var App = (function () {
                           '<h3>' + markers[i].type.toUpperCase()  + '</h3>'+
                           '</div><div class="iw-main ' + markers[i].type + '-bg">'+
                           '<div class="iw-text">' +
-                          '<p><span>Address: </span><span>( ' + markers[i].lat + ', ' + markers[i].lng  + ' )</span></p></div>' +
+                          '<p><span>Address: </span><span>' + markers[i].address + '</span></p></div>' +
                           '<img class="lost-img block-center" src="' + URL + markers[i].photo +'" alt="' + markers[i].name +'">' +
                           '<p><span>Name: </span><stromg>' + markers[i].name.toUpperCase()  + '</stromg></p>' +
                           '<p><span>Talk: </span><span>' + markers[i].info  + '</span></p>' +

@@ -44,15 +44,5 @@ class Type_model extends CI_Model
 
         return $res->type_id;
     }
-    /**
-     * @return mixed
-     */
-    public function allTypes()
-    {
-        return $this->db->query("SELECT *  
-                                  FROM types
-                                  ORDER BY id ASC
-                                  ")->result();
-    }
 
 }

@@ -48,10 +48,11 @@ class App extends CI_Controller
             $this->load->helper("security");
 
             $post['name'] = $this->security->xss_clean($_POST['name']);
-            $post['info'] = $this->security->xss_clean($_POST['info']);
+            $post['info'] = $this->security->xss_clean($_POST['additional']);
             $post['type'] = $this->security->xss_clean($_POST['type']);
             $post['lat'] = $this->security->xss_clean($_POST['lat']);
             $post['lng'] = $this->security->xss_clean($_POST['lng']);
+            $post['address'] = $this->security->xss_clean($_POST['address']);
             $post['photo'] = $_POST['photo'];
 
 
@@ -62,7 +63,14 @@ class App extends CI_Controller
                 $response['messages'][] = 'name';
             }
 
-            if (empty($post['info']))
+            if (empty($post['address']))
+            {
+                $response['success'] = false;
+                $response['errors']++;
+                $response['messages'][] = 'address';
+            }
+
+            if (empty($post['info']) && $post['info'] != 0)
             {
                 $response['success'] = false;
                 $response['errors']++;
@@ -92,10 +100,14 @@ class App extends CI_Controller
 
             if ($response['success'])
             {
-                $animal = $this->animal->store($post);
+                $response['result'] = $this->animal->store($post);
                 echo json_encode($response);
             }
 
+            echo json_encode($response);
+
+        } else {
+            die('POST is empty!');
         }
 	}
 

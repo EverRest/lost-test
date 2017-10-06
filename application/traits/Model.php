@@ -32,7 +32,7 @@ if (!trait_exists('Model')) {
         public function getAll()
         {
             if (empty($this->_tbl)) return false;
-            $query = $this->db->get($this->_tbl)->order_by('id', 'ASC');
+            $query = $this->db->order_by('id', 'ASC')->get($this->_tbl);
             return $query->result();
         }
 
